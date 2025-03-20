@@ -31,6 +31,7 @@ public class ExampleExercise {
             System.out.println("======= EXECUTAR QUERYS ======");
             stmt.execute("CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(100))");
             stmt.execute("INSERT INTO users (id, name) VALUES (1, 'Claudio Henrique')");
+            stmt.execute("INSERT INTO users (id, name) VALUES (2, 'Elisabeth')");
             System.out.println("Registro inserido com sucesso.");
         } catch (SQLException e) {
             e.printStackTrace();

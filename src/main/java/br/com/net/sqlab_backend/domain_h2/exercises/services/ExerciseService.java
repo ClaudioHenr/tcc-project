@@ -40,7 +40,7 @@ public class ExerciseService {
                 }
             }
 
-            return resultString.toString().isEmpty() ? "Nenhum dado encontrado." : resultString.toString();
+            return resultString.toString();
         } catch (SQLException e) {
             e.printStackTrace();
             return "Erro ao executar a query.";
@@ -49,5 +49,77 @@ public class ExerciseService {
             exampleExercise.closeConnection(conn);
         }
     }
+
+    public String insertDataExerciseTest(String query) {
+       // Criar conexão com H2
+       Connection conn = exampleExercise.createConnection();
+       if (conn == null) {
+           return "Erro ao conectar ao banco H2.";
+       }
+
+       try {
+           // Criar tabela e inserir dados de exercício
+           exampleExercise.executeOperations(conn);
+
+           // Executar exercício (query do usuário)
+           StringBuilder resultString = new StringBuilder();
+           try (Statement stmt = conn.createStatement())
+           {
+                int rowsAffected = stmt.executeUpdate(query); // Inserir linha
+                System.out.println("Linhas afetadas: " + rowsAffected);
+                ResultSet result = stmt.executeQuery("SELECT * FROM users");
+                System.out.println("Query executada com sucesso");
+                while (result.next()) {
+                    resultString.append("ID: ").append(result.getInt("id"))
+                               .append(", Nome: ").append(result.getString("name"))
+                               .append("\n");
+               }
+           }
+
+           return resultString.toString();
+       } catch (SQLException e) {
+           e.printStackTrace();
+           return "Erro ao executar a query.";
+       } finally {
+           // Fechar conexão
+           exampleExercise.closeConnection(conn);
+       }
+    }
+
+    public String deleteDataExerciseTest(String query) {
+        // Criar conexão com H2
+        Connection conn = exampleExercise.createConnection();
+        if (conn == null) {
+            return "Erro ao conectar ao banco H2.";
+        }
+ 
+        try {
+            // Criar tabela e inserir dados de exercício
+            exampleExercise.executeOperations(conn);
+ 
+            // Executar exercício (query do usuário)
+            StringBuilder resultString = new StringBuilder();
+            try (Statement stmt = conn.createStatement())
+            {
+                 int rowsAffected = stmt.executeUpdate(query); // Inserir linha
+                 System.out.println("Linhas afetadas: " + rowsAffected);
+                 ResultSet result = stmt.executeQuery("SELECT * FROM users");
+                 System.out.println("Query executada com sucesso");
+                 while (result.next()) {
+                     resultString.append("ID: ").append(result.getInt("id"))
+                                .append(", Nome: ").append(result.getString("name"))
+                                .append("\n");
+                }
+            }
+ 
+            return resultString.toString();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Erro ao executar a query.";
+        } finally {
+            // Fechar conexão
+            exampleExercise.closeConnection(conn);
+        }
+     }
 
 }
