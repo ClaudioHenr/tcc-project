@@ -21,19 +21,26 @@ public class ExercisesController {
     
     @PostMapping("/test")
     public String testSolveExercise(@RequestBody QueryExerciseDTO queryDTO) {
-        String result = exerciseService.getDataExerciseTest(queryDTO.query());
+        String result = exerciseService.getDataExerciseTest(queryDTO);
+        return result;
+    }
+
+    @PostMapping("/test/create")
+    public String postMethodName(@RequestBody QueryExerciseDTO queryDTO) {
+        String result = exerciseService.createTableExerciseTest(queryDTO);
         return result;
     }
     
+    
     @PostMapping("/test/insert")
     public String testSolveInsertExercise(@RequestBody QueryExerciseDTO queryDTO) {
-        String result = exerciseService.insertDataExerciseTest(queryDTO.query());        
+        String result = exerciseService.insertDataExerciseTest(queryDTO);        
         return result;
     }
     
     @PostMapping("/test/delete")
     public String testSolveDeleteExercise(@RequestBody QueryExerciseDTO queryDTO) {
-        String result = exerciseService.deleteDataExerciseTest(queryDTO.query());        
+        String result = exerciseService.deleteDataExerciseTest(queryDTO);        
         return result;
     }
     

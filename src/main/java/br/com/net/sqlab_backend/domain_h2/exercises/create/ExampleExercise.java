@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ExampleExercise {
 
-    public Connection createConnection() {
-        String url = "jdbc:h2:mem:db_exercise_test";
+    public Connection createConnection(String dialect) {
+        System.out.println("CRIANDO CONEXÃO COM DIALETO: " + dialect);
+        String url = "jdbc:h2:mem:db_exercise_test;" + dialect;
+        // String url = "jdbc:h2:file:./database_tests;DB_CLOSE_ON_EXIT=FALSE;" + dialect;
         try {
             System.out.println("======= CRIAR CONEXÃO ======");
             Class.forName("org.h2.Driver"); // Carrega o driver manualmente
@@ -32,7 +34,7 @@ public class ExampleExercise {
             stmt.execute("CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(100))");
             stmt.execute("INSERT INTO users (id, name) VALUES (1, 'Claudio Henrique')");
             stmt.execute("INSERT INTO users (id, name) VALUES (2, 'Elisabeth')");
-            System.out.println("Registro inserido com sucesso.");
+            System.out.println("REGISTROS DE TESTE INSERIDOS COM SUCESSO");
         } catch (SQLException e) {
             e.printStackTrace();
         }
