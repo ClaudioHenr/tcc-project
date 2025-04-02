@@ -6,18 +6,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.net.sqlab_backend.domain_h2.dto.QueryExerciseDTO;
-import br.com.net.sqlab_backend.domain_h2.exercises.services.ExerciseService;
+import br.com.net.sqlab_backend.domain_h2.jdbc_puro.services.ExerciseService;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @CrossOrigin
 @RestController
-@RequestMapping("api/exercices")
+@RequestMapping("api/exercices/jdbcpuro")
 public class ExercisesController {
 
     @Autowired
     private ExerciseService exerciseService;
+
+    @PostMapping("/solve")
+    public String solveExercise(@RequestBody QueryExerciseDTO queryDTO) {
+        String result = exerciseService.handleSolveExercise(queryDTO);
+        return result;
+    }
+
+
     
     @PostMapping("/test")
     public String testSolveExercise(@RequestBody QueryExerciseDTO queryDTO) {
@@ -31,17 +39,16 @@ public class ExercisesController {
         return result;
     }
     
+    // @PostMapping("/test/insert")
+    // public String testSolveInsertExercise(@RequestBody QueryExerciseDTO queryDTO) {
+    //     String result = exerciseService.insertDataExerciseTest(queryDTO);        
+    //     return result;
+    // }
     
-    @PostMapping("/test/insert")
-    public String testSolveInsertExercise(@RequestBody QueryExerciseDTO queryDTO) {
-        String result = exerciseService.insertDataExerciseTest(queryDTO);        
-        return result;
-    }
-    
-    @PostMapping("/test/delete")
-    public String testSolveDeleteExercise(@RequestBody QueryExerciseDTO queryDTO) {
-        String result = exerciseService.deleteDataExerciseTest(queryDTO);        
-        return result;
-    }
+    // @PostMapping("/test/delete")
+    // public String testSolveDeleteExercise(@RequestBody QueryExerciseDTO queryDTO) {
+    //     String result = exerciseService.deleteDataExerciseTest(queryDTO);        
+    //     return result;
+    // }
     
 }
