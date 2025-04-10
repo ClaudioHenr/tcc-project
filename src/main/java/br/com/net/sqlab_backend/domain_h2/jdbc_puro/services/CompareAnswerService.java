@@ -56,9 +56,6 @@ public class CompareAnswerService {
         return true;
     }
 
-
-
-
     public static boolean compareResultSets(ResultSet rs1, ResultSet rs2) throws SQLException {
         List<Map<String, Object>> list1 = resultSetToList(rs1);
         List<Map<String, Object>> list2 = resultSetToList(rs2);
