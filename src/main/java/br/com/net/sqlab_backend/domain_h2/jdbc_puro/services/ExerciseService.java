@@ -27,20 +27,29 @@ public class ExerciseService {
         Connection conn = exampleExercise.createEnviromentForExercise(query.exerciseId(), query.dialect());
 
         // QUERY RESPOSTA DO EXERCÍCIO
-        String queryAnswer = "SELECT * FROM users WHERE age = 30";
+        String queryAnswer = "SELECT * FROM users;";
 
         // COMPARAR USANDO METADATA
-        try {
-            QueryResult resultTest = executeQuery(conn, query.query());
-            QueryResult resultAnswer = executeQuery(conn, queryAnswer);
-
-            boolean resultComparable = compareAnswerService.compareExerciseWithMetaData(resultAnswer.resultSet, resultTest.resultSet);
-            System.out.println(resultComparable ? "Mesmo resultado" : "Query com resultado diferente da resposta");
-
-            // Fechar ResultSet e Statement após uso
-            resultTest.close();
-            resultAnswer.close();
-
+        try {            
+            if (query.type() == 1) {
+                QueryResult resultTest = executeQuerySelect(conn, query.query(), query.type());
+                QueryResult resultAnswer = executeQuerySelect(conn, queryAnswer, query.type());
+                printQuery(resultTest.resultSet);
+                boolean resultComparable = compareAnswerService.compareExerciseWithMetaData(resultAnswer.resultSet, resultTest.resultSet);
+                System.out.println(resultComparable ? "Mesmo resultado" : "Query com resultado diferente da resposta");
+                // Fechar ResultSet e Statement após uso
+                resultTest.close();
+                resultAnswer.close();
+            } else {
+                QueryResult resultTest = executeQueryUpdateOrDelete(conn, query.query(), query.type());
+                QueryResult resultAnswer = executeQueryUpdateOrDelete(conn, queryAnswer, query.type());
+                boolean isEqual = resultTest.updateCount == resultAnswer.updateCount;
+                if (isEqual) {
+                    System.out.println("Mesma quantidade de linhas alteradas");
+                } else {
+                    System.out.println("Quantidade diferente de linhas alteradas");
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Erro ao executar queries: " + e.getMessage());
             e.printStackTrace();
@@ -56,11 +65,11 @@ public class ExerciseService {
     }
 
     // Executa a query e mantém o Statement aberto
-    public QueryResult executeQuery(Connection conn, String query) {
+    public QueryResult executeQuerySelect(Connection conn, String query, int typeQuery) {
         try {
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery(query);
-            System.out.println("Query executada com sucesso");
+            System.out.println("Query de select executada com sucesso");
             return new QueryResult(stmt, result);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,6 +77,37 @@ public class ExerciseService {
         }
     }
 
+    public QueryResult executeQueryUpdateOrDelete(Connection conn, String query, int typeQuery) {
+        try {
+            Statement stmt = conn.createStatement();
+            int updateCount = stmt.executeUpdate(query);
+            System.out.println("Query de update ou delete executada com sucesso, linhas afetadas: " + updateCount);
+            return new QueryResult(stmt, updateCount);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao executar a query SQL: " + e.getMessage());
+        }
+    }
+
+    public void printQuery(ResultSet result) {
+        System.out.println("======== PRINT DE QUERY ========");
+        StringBuilder resultString = new StringBuilder();
+        try {            
+            ResultSetMetaData resultMetaData = result.getMetaData();
+            while (result.next()) {  // Percorre as linhas do resultado
+                for (int i = 1; i <= resultMetaData.getColumnCount(); i++) {
+                    String columnName = resultMetaData.getColumnName(i);
+                    String columnValue = result.getString(columnName); // Pega o valor da coluna
+        
+                    System.out.println(columnName + ": " + columnValue);
+                    resultString.append(columnName).append(": ").append(columnValue).append("\n");
+                }
+                resultString.append("\n"); // Separação entre registros
+            }
+        } catch (Exception e) {
+        }
+        System.out.println(resultString.toString());
+    }
 
 
 

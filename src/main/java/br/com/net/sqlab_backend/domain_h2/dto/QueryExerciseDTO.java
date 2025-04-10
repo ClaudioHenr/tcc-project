@@ -6,6 +6,8 @@ public record QueryExerciseDTO(
 
     String query,
 
+    int type, // 1-select, 2-update ou delete
+
     String dialect,
 
     String sgbd

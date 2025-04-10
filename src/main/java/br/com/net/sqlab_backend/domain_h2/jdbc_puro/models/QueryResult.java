@@ -7,14 +7,24 @@ import java.sql.Statement;
 public class QueryResult {
     public Statement statement;
     public ResultSet resultSet;
+    public int updateCount;
 
+    // Para SELECT
     public QueryResult(Statement statement, ResultSet resultSet) {
         this.statement = statement;
         this.resultSet = resultSet;
+        this.updateCount = -1;
+    }
+
+    // Para UPDATE/DELETE
+    public QueryResult(Statement statement, int updateCount) {
+        this.statement = statement;
+        this.resultSet = null;
+        this.updateCount = updateCount;
     }
 
     public void close() throws SQLException {
-        resultSet.close();
+        if (resultSet != null) resultSet.close();
         statement.close();
     }
 }

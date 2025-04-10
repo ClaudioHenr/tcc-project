@@ -18,7 +18,7 @@ public class CompareAnswerService {
     public boolean compareExerciseWithMetaData(ResultSet answerProfessor, ResultSet answerStudent) throws SQLException {
         ResultSetMetaData metaData1 = answerProfessor.getMetaData();
         ResultSetMetaData metaData2 = answerStudent.getMetaData();
-
+        
         int columnCount1 = metaData1.getColumnCount();
         int columnCount2 = metaData2.getColumnCount();
 
