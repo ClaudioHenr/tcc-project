@@ -5,7 +5,7 @@ import { StudentCreateComponent } from './pages/student/student-create/student-c
 import { StudentListComponent } from './pages/student/student-list/student-list.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { SigninComponent } from './authentication/signin/signin.component';
-import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { MainLayoutComponent } from './layouts/student-layout/main-layout.component';
 import { StudentHomeComponent } from './pages/student/student-home/student-home.component';
 
 export const routes: Routes = [
