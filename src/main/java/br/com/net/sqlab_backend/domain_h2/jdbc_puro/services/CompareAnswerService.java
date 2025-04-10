@@ -56,37 +56,6 @@ public class CompareAnswerService {
         return true;
     }
 
-    public void compareExerciseWithExcept(Connection conn, String queryProfessor, String queryStudent) {
-        String query = queryProfessor + " EXCEPT " + queryStudent;
-        StringBuilder resultString = new StringBuilder();
-        boolean hasDifferences = false;
-
-        try (Statement stmt = conn.createStatement(); ResultSet result = stmt.executeQuery(query))
-        {
-            System.out.println("QUERY DE COMPARAÇÃO EXECUTADA COM SUCESSO");
-            ResultSetMetaData resultMetaData = result.getMetaData();
-            while (result.next()) {  // Se houver dados, há diferenças
-                hasDifferences = true;
-                for (int i = 1; i <= resultMetaData.getColumnCount(); i++) {
-                    String columnName = resultMetaData.getColumnName(i);
-                    String columnValue = result.getString(i); // Obtém o valor
-                    resultString.append(columnName).append(": ").append(columnValue).append("\n");
-                }
-                resultString.append("\n"); // Separação entre registros
-            }
-    
-            // Exibe se houve diferenças
-            if (hasDifferences) {
-                System.out.println("As queries são diferentes:\n" + resultString);
-            } else {
-                System.out.println("As queries retornam os mesmos resultados.");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao executar a query SQL: " + e.getMessage());
-        } 
-    }
 
 
 
