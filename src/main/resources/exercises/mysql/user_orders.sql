@@ -30,15 +30,12 @@ CREATE TABLE orders (
 
 INSERT INTO orders (user_id, order_date, total_amount, status) VALUES 
 (1, '2024-03-01', 150.75, 'Pendente'),
-(2, '2024-03-02', 200.50, 'Finalizado'),
-(3, '2024-03-03', 89.99, 'Cancelado'),
+(1, '2024-03-02', 200.50, 'Finalizado'),
+(1, '2024-03-03', 89.99, 'Cancelado'),
 (4, '2024-03-04', 120.00, 'Pendente'),
-(5, '2024-03-05', 300.25, 'Finalizado'),
+(4, '2024-03-05', 300.25, 'Finalizado'),
 (6, '2024-03-06', 50.00, 'Pendente'),
 (7, '2024-03-07', 450.60, 'Finalizado'),
 (8, '2024-03-08', 99.99, 'Cancelado'),
 (9, '2024-03-09', 210.40, 'Pendente'),
 (10, '2024-03-10', 75.30, 'Finalizado');
-
-
-
