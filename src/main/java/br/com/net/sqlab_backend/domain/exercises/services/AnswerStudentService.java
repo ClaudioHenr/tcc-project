@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 import br.com.net.sqlab_backend.domain.exercises.dto.AnswerStudentCreateDTO;
 import br.com.net.sqlab_backend.domain.exercises.mapper.AnswerStudentMapper;
 import br.com.net.sqlab_backend.domain.exercises.models.AnswerStudent;
+import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.repositories.AnswerStudentRepository;
+import br.com.net.sqlab_backend.domain.student.models.Student;
+import br.com.net.sqlab_backend.domain.student.services.StudentService;
 
 @Service
 public class AnswerStudentService {
@@ -14,13 +17,20 @@ public class AnswerStudentService {
     @Autowired
     AnswerStudentRepository answerStudentRepository;
 
-    // @Autowired
-    // AnswerStudentMapper answerStudentMapper;
+    @Autowired
+    AnswerStudentMapper answerStudentMapper;
+
+    @Autowired
+    ExerciseService exerciseService;
+
+    @Autowired
+    StudentService studentService;
 
     public AnswerStudent save(AnswerStudentCreateDTO answerStudentCreateDTO) {
-        // AnswerStudent answerStudent = answerStudentMapper.toEntity(answerStudentCreateDTO);
-
-        return answerStudentRepository.save(new AnswerStudent());
+        Exercise exercise = exerciseService.getById(answerStudentCreateDTO.exerciseId());
+        Student student = studentService.getById(answerStudentCreateDTO.studentId());
+        AnswerStudent answerStudent = new AnswerStudent(answerStudentCreateDTO.answer(), false, exercise, student);
+        return answerStudentRepository.save(answerStudent);
     }
     
 }

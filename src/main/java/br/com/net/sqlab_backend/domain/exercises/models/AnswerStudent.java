@@ -31,4 +31,11 @@ public class AnswerStudent {
     @ManyToOne
     private Student student;
 
+    public AnswerStudent(String answer, boolean isCorrect, Exercise exercise, Student student) {
+        this.answer = answer;
+        this.isCorrect = isCorrect;
+        this.exercise = exercise;
+        this.student = student;
+    }
+
 }

@@ -6,9 +6,9 @@ public record AnswerStudentCreateDTO(
 
     Boolean isCorrect,
 
-    Long exercise_id,
+    Long exerciseId,
 
-    Long student_id
+    Long studentId
 
 ) {
     
