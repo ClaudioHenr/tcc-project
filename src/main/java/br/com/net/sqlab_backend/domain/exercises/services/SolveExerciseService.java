@@ -5,10 +5,14 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.net.sqlab_backend.domain.answer.models.Answer;
+import br.com.net.sqlab_backend.domain.answer.services.AnswerService;
 import br.com.net.sqlab_backend.domain.exercises.dto.AnswerStudentCreateDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.QueryExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.ResponseExerciseDTO;
@@ -26,70 +30,47 @@ public class SolveExerciseService {
     @Autowired
     private EnvironmentExerciseService environmentExerciseService;
 
+    @Autowired
+    private AnswerService answerService;
+
     public ResponseExerciseDTO handleSolveExercise(QueryExerciseDTO query) {
         // Salvar query em answer_student
         AnswerStudentCreateDTO dto = new AnswerStudentCreateDTO(query.query(), null, query.exerciseId(),query.studentId());
         answerStudentService.save(dto);
 
         // Recuperar query resposta de answer_professor/resposta pré cadastrada
-        String answerProfessor = answerProfessorService.getAnswerProfessorByExerciseId(query.exerciseId());
-        System.out.println(answerProfessor);
+        // String answerProfessor = answerProfessorService.getAnswerProfessorByExerciseId(query.exerciseId());
+        Answer answer = answerService.getByExerciseId(query.exerciseId());
+        System.out.println(answer.getAnswer());
+
         // Criar 'ambiente'
         Connection conn = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
 
-        // Executar as duas queries
-
-        
-        // Comparar resultados das duas queries
+        try {
+            // Executar as duas queries
+            QueryResult resultQueryStudent = executeQuerySelect(conn, query.query(), 0);
+            QueryResult resultQueryAnswer = executeQuerySelect(conn, answer.getAnswer(), 0);
+            List<Map<String, Object>> answerList = CompareAnswerService.resultSetToList(resultQueryAnswer.resultSet);
+            List<Map<String, Object>> studentList = CompareAnswerService.resultSetToList(resultQueryStudent.resultSet);
+            // Comparar resultados das duas queries
+            boolean isIqual = CompareAnswerService.compareLists(answerList, studentList);
+            ResponseExerciseDTO res = new ResponseExerciseDTO(isIqual, studentList);
+            // Fechar ResultSet e Statement após uso
+            resultQueryStudent.close();
+            resultQueryAnswer.close();
+            // Retornar
+            return res;
+        } catch (Exception e) {
+            System.err.println("Erro ao executar queries: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            environmentExerciseService.closeConnection(conn);
+        }
 
         // Retornar
-
         ResponseExerciseDTO res = new ResponseExerciseDTO(false, null);
         return res;
     }
-
-
-    // public String handleSolveExerciseTest(QueryExerciseDTO query) {
-    //     // CRIAR 'AMBIENTE' PARA TESTAR RESPOSTA DO ALUNO
-    //     Connection conn = exampleExercise.createEnviromentForExercise(query.exerciseId(), query.dialect());
-
-    //     // QUERY RESPOSTA DO EXERCÍCIO
-    //     String queryAnswer = "SELECT * FROM users;";
-
-    //     // COMPARAR USANDO METADATA
-    //     try {            
-    //         if (query.type() == 1) {
-    //             QueryResult resultTest = executeQuerySelect(conn, query.query(), query.type());
-    //             QueryResult resultAnswer = executeQuerySelect(conn, queryAnswer, query.type());
-    //             printQuery(resultTest.resultSet);
-    //             boolean resultComparable = compareAnswerService.compareExerciseWithMetaData(resultAnswer.resultSet, resultTest.resultSet);
-    //             System.out.println(resultComparable ? "Mesmo resultado" : "Query com resultado diferente da resposta");
-    //             // Fechar ResultSet e Statement após uso
-    //             resultTest.close();
-    //             resultAnswer.close();
-    //         } else {
-    //             QueryResult resultTest = executeQueryUpdateOrDelete(conn, query.query(), query.type());
-    //             QueryResult resultAnswer = executeQueryUpdateOrDelete(conn, queryAnswer, query.type());
-    //             boolean isEqual = resultTest.updateCount == resultAnswer.updateCount;
-    //             if (isEqual) {
-    //                 System.out.println("Mesma quantidade de linhas alteradas");
-    //             } else {
-    //                 System.out.println("Quantidade diferente de linhas alteradas");
-    //             }
-    //         }
-    //     } catch (SQLException e) {
-    //         System.err.println("Erro ao executar queries: " + e.getMessage());
-    //         e.printStackTrace();
-    //         return "Erro ao processar a query.";
-    //     } finally {
-    //         exampleExercise.closeConnection(conn);
-    //     }
-        
-    //     // COMPARAR USANDO QUERY 'EXCEPT'
-    //     // compareAnswerService.compareExerciseWithExcept(conn, queryAnswer, query.query());
-
-    //     return "";
-    // }
 
     // Executa a query e mantém o Statement aberto
     public QueryResult executeQuerySelect(Connection conn, String query, int typeQuery) {
@@ -135,51 +116,5 @@ public class SolveExerciseService {
         }
         System.out.println(resultString.toString());
     }
-
-    // public String createTableExerciseTest(QueryExerciseDTO query) {
-    //     // Criar conexão com H2
-    //     Connection conn = exampleExercise.createConnection(query.dialect());
-    //     if (conn == null) {
-    //         return "Erro ao conectar ao banco H2.";
-    //     }
-
-    //     try {
-    //         // Executar exercício (query do usuário)
-    //         StringBuilder resultString = new StringBuilder();
-    //         try (Statement stmt = conn.createStatement()) {
-
-    //             boolean resultQuery = stmt.execute(query.query());
-    //             System.out.println("Query executada: " + resultQuery);
-
-    //             // Verifique se a query foi executada com sucesso (para criação de tabela, normalmente não haverá retorno)
-    //             if (!resultQuery) {
-    //                 resultString.append("Tabela criada com sucesso ou query executada.\n");
-    //             }
-
-    //             // Obtém as colunas da tabela (se a tabela foi criada com sucesso)
-    //             ResultSet resultColumns = stmt.executeQuery("SELECT * FROM users LIMIT 0"); // Consulta sem dados, apenas para obter colunas
-    //             ResultSetMetaData metaData = resultColumns.getMetaData();
-
-    //             resultString.append("Colunas da tabela criada:\n");
-    //             for (int i = 1; i <= metaData.getColumnCount(); i++) {
-    //                 resultString.append(metaData.getColumnName(i) + " ");
-    //                 resultString.append(metaData.getColumnTypeName(i)).append("\n");
-    //             }
-
-    //             // Caso a tabela esteja vazia, já teríamos capturado as colunas.
-    //             if (resultString.length() == 0) {
-    //                 resultString.append("Tabela vazia.");
-    //             }
-    //         }
-    //         System.out.println(resultString);
-    //         return resultString.toString();
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //         return "Erro ao executar a query SQL: " + e.getMessage();
-    //     } finally {
-    //         // Fechar conexão
-    //         exampleExercise.closeConnection(conn);
-    //     }
-    // }
-    
+   
 }
