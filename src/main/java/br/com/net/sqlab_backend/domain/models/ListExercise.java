@@ -1,6 +1,5 @@
-package br.com.net.sqlab_backend.domain.student.models;
+package br.com.net.sqlab_backend.domain.models;
 
-import br.com.net.sqlab_backend.domain.models.Grade;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,10 +10,10 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
+@Table(name = "list_exercise")
 @Entity
-@Table
-public class Student {
-
+public class ListExercise {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,5 +21,4 @@ public class Student {
     @JoinColumn(name = "grade_id")
     @ManyToOne
     private Grade grade;
-    
 }
