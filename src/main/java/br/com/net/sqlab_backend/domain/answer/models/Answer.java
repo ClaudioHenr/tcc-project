@@ -9,8 +9,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table
 public class Answer {
@@ -24,5 +26,10 @@ public class Answer {
     @JoinColumn(name = "exercise_id")
     @OneToOne
     private Exercise exercise;
+
+    public Answer(String answer, Exercise exercise) {
+        this.answer = answer;
+        this.exercise = exercise;
+    }
 
 }

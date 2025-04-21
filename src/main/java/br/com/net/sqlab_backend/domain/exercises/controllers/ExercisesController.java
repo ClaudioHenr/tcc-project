@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @CrossOrigin
 @RestController
-@RequestMapping("api/exercice/")
+@RequestMapping("api/exercise")
 public class ExercisesController {
 
     @Autowired

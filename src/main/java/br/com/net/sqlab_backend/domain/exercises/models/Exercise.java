@@ -1,7 +1,5 @@
 package br.com.net.sqlab_backend.domain.exercises.models;
 
-import java.util.List;
-
 import br.com.net.sqlab_backend.domain.exercises.enums.Dialect;
 import br.com.net.sqlab_backend.domain.models.ListExercise;
 import br.com.net.sqlab_backend.domain.professor.models.Professor;
@@ -15,8 +13,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table
 public class Exercise {
@@ -32,7 +32,13 @@ public class Exercise {
     @ManyToOne
     private Professor professor;
 
-    @JoinColumn(name = "list_exercise_id")
+    @JoinColumn(name = "list_id")
     @ManyToOne
     private ListExercise listExercise;
+
+    public Exercise(Dialect dialect) {
+        this.dialect = dialect;
+    }
+
+    
 }
