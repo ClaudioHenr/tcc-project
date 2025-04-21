@@ -1,26 +1,58 @@
 <div class="p-8 max-w-4xl mx-auto">
-    <div class="bg-white shadow-xl rounded-2xl p-6 space-y-6 border border-gray-200">
-      <h2 class="text-2xl font-bold">Questão 1</h2>
-      <p class="text-gray-700">
-        Liste todos os alunos que estão matriculados no curso de 'Engenharia de Software'.
-      </p>
-  
-      <img *ngIf="imageUrl" [src]="imageUrl" alt="Imagem da questão" class="rounded-lg border border-gray-300 max-w-full">
-  
-      <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Sua resposta (SQL):</label>
-        <div class="border rounded-lg overflow-hidden">
-          <div id="editor" class="h-48 w-full"></div>
-        </div>
-      </div>
-      
-      <div class="mt-4 text-right">
-        <button
-          class="bg-blue-600 text-white px-4 py-2 rounded-xl shadow-md hover:bg-blue-700 transition"
-          (click)="enviarResposta()"
-        >
-          Enviar Resposta
-        </button>
+  <div class="bg-white shadow-xl rounded-2xl p-6 space-y-6 border border-gray-200">
+    <h2 class="text-2xl font-bold">Questão 1</h2>
+    <p class="text-gray-700">
+      Liste todos os usuários da tabela users com menos de 30 anos.
+    </p>
+
+    @if (imageUrl) {
+      <img [src]="imageUrl" alt="Imagem da questão" class="rounded-lg border border-gray-300 max-w-full">
+    }
+
+    <div class="mt-4">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Sua resposta (SQL):</label>
+      <div class="border rounded-lg overflow-hidden">
+        <div id="editor" class="h-48 w-full"></div>
       </div>
     </div>
+
+    @if (responseExercise) {
+      @if (responseExercise.isCorrect) {
+        <p class="text-green-600">Resposta correta!</p>
+      } @else if (responseExercise) {
+        <p class="text-red-600">Resposta incorreta!!</p>
+      }
+      <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th *ngFor="let key of getTableKeys()" scope="col" class="px-6 py-3">
+                {{ key }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of responseExercise.resultQuery" class="bg-white border-b border-gray-200">
+              <td *ngFor="let key of getTableKeys()" class="px-6 py-4">
+                {{ row[key] }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <p class="text-red-600">
+      {{errorMessage}}
+    </p>
+    
+    <div class="mt-4 text-right">
+      <button
+        class="bg-blue-600 text-white px-4 py-2 rounded-xl shadow-md hover:bg-blue-700 transition"
+        (click)="enviarResposta()"
+      >
+        Enviar Resposta
+      </button>
+    </div>
   </div>
+</div>
