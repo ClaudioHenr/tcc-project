@@ -7,6 +7,8 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { SigninComponent } from './authentication/signin/signin.component';
 import { MainLayoutComponent } from './layouts/student-layout/main-layout.component';
 import { StudentHomeComponent } from './pages/student/student-home/student-home.component';
+import { SelfRegistrationComponent } from './register/professor/self-registration/self-registration.component';
+import { RegistrationComponent } from './register/student/registration/registration.component';
 
 export const routes: Routes = [
     {
@@ -38,6 +40,15 @@ export const routes: Routes = [
                 ]
              },
         ]
+    },
+
+    {
+        path: 'register/professor',
+        component: SelfRegistrationComponent
+    },
+    {
+        path: 'register/student',
+        component : RegistrationComponent
     },
 
     {
