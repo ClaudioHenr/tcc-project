@@ -1,1 +1,25 @@
-<p>student-list works!</p>
+<div class="p-6 sm:ml-64 mt-8">
+    <div class="p-4 border border-gray-200 rounded-lg dark:border-gray-700">
+        <div class="flex flex-wrap justify-between gap-4">
+            @for (item of cards; track $index) {
+                <app-card [title]="item.title" [description]="'Lorem Ipsum'" [route]="'/'"></app-card>
+            }
+        </div>
+       
+        <!-- <div class="grid grid-cols-3 gap-4 mb-4">
+            @for (item of cards; track $index) {
+                <app-card [title]="'Título'" [description]="'Lorem Ipsum'" [route]="'/'"></app-card>
+            }
+          <div class="flex items-center justify-center rounded-sm bg-gray-50 dark:bg-gray-800">
+              @for (item of cards; track $index) {
+                <app-card [title]="'Título'" [description]="'Lorem Ipsum'" [route]="'/'"></app-card>
+                }
+          </div>
+       </div> -->
+       <!-- <div class="flex flex-wrap items-center justify-center h-48 mb-4 rounded-sm bg-gray-50 dark:bg-gray-800">
+            @for (item of cards; track $index) {
+               <app-card [title]="'Título'" [description]="'Lorem Ipsum'" [route]="'/'"></app-card>
+            }
+       </div> -->
+    </div>
+</div>

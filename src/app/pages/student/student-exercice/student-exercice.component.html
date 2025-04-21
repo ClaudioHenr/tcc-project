@@ -26,17 +26,23 @@
         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
-              <th *ngFor="let key of getTableKeys()" scope="col" class="px-6 py-3">
-                {{ key }}
-              </th>
+              @for (key of getTableKeys(); track $index) {
+                <th scope="col" class="px-6 py-3">
+                  {{ key }}
+                </th>
+              }
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let row of responseExercise.resultQuery" class="bg-white border-b border-gray-200">
-              <td *ngFor="let key of getTableKeys()" class="px-6 py-4">
-                {{ row[key] }}
-              </td>
-            </tr>
+            @for (row of responseExercise.resultQuery; track $index) {
+              <tr class="bg-white border-b border-gray-200">
+              @for (key of getTableKeys(); track $index) {
+                <td class="px-6 py-4">
+                  {{ row[key] }}
+                </td>
+              }
+              </tr>
+            }
           </tbody>
         </table>
       </div>
