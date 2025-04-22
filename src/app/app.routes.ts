@@ -9,12 +9,12 @@ import { MainLayoutComponent } from './layouts/student-layout/main-layout.compon
 import { StudentHomeComponent } from './pages/student/student-home/student-home.component';
 import { SelfRegistrationComponent } from './register/professor/self-registration/self-registration.component';
 import { RegistrationComponent } from './register/student/registration/registration.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'auth/signin',
-        pathMatch: 'full'
+        component: HomeComponent
     },
 
     {
