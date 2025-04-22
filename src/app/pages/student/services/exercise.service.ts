@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, filter, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 interface ResponseExercise {
@@ -23,7 +23,7 @@ export class ExerciseService {
       .pipe(
         tap(data => console.log("Retorno: ", data)),
         catchError((err: HttpErrorResponse) => {
-          console.log(err.error);
+          console.log(err);
           return throwError(() => err.error);
         })
       );
