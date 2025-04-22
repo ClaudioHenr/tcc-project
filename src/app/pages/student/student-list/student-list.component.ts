@@ -11,13 +11,11 @@ import { CardComponent } from "../../../components/card/card.component";
 export class StudentListComponent {
 
   cards: any = [
-    {title: "Lista 01", "description": "", "route": ""},
+    {title: "Lista 01", "description": "", "route": "/student/exercises"},
     {title: "Lista 02", "description": "", "route": ""},
     {title: "Lista 03", "description": "", "route": ""},
     {title: "Lista 04", "description": "", "route": ""},
     {title: "Lista 05", "description": "", "route": ""}
   ]
-
-  
 
 }

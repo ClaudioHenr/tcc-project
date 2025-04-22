@@ -1,7 +1,13 @@
-<p>student-home works!</p>
-<div class="flex flex-row gap-4 links">
-    <a routerLink="create" routerLinkActive="active">create</a>
-    <a routerLink="exercice" routerLinkActive="active">exercice</a>
-    <a routerLink="list" routerLinkActive="active">list</a>
+<div class="p-6 sm:ml-64 mt-14 mx-auto">
+    <div class="bg-white shadow-xl rounded-2xl p-6 space-y-6 border border-gray-200">
+        <p>Seja Bem vindo!</p>
+        <div class="flex flex-col md:flex-row gap-6">
+            @for (item of cardsInfo; track $index) {
+                <app-card [title]="item.title" [description]="item.description" [route]="item.route"></app-card>
+            }
+        </div>
+        <div>
+
+        </div>
+    </div>
 </div>
-<router-outlet></router-outlet>
