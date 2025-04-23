@@ -45,7 +45,7 @@ public class DataSeeder implements CommandLineRunner {
         Exercise exer04 = exerciseRepository.save(new Exercise(Dialect.MYSQL));
         
         // Inserção de respostas
-        List<String> queries = Arrays.asList("SELECT COUNT(*) FROM users;", "SELECT SUM(age) FROM users;", "SELECT * FROM users WHERE age > 30;", "SELECT age, COUNT(*) FROM users GROUP BY age;");
+        List<String> queries = Arrays.asList("SELECT COUNT(*) AS contagem FROM users;", "SELECT SUM(age) FROM users;", "SELECT * FROM users WHERE age > 30;", "SELECT age, COUNT(*) FROM users GROUP BY age;");
         Answer answer01 = new Answer(queries.get(0), exer01);
         Answer answer02 = new Answer(queries.get(1), exer02);
         Answer answer03 = new Answer(queries.get(2), exer03);
