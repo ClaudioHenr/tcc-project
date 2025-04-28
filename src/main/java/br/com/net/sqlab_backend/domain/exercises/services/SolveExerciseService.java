@@ -16,6 +16,7 @@ import br.com.net.sqlab_backend.domain.answer.services.AnswerService;
 import br.com.net.sqlab_backend.domain.exercises.dto.AnswerStudentCreateDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.QueryExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.ResponseExerciseDTO;
+import br.com.net.sqlab_backend.domain.exercises.models.AnswerStudent;
 import br.com.net.sqlab_backend.domain.exercises.models.QueryResult;
 
 @Service
@@ -36,7 +37,7 @@ public class SolveExerciseService {
     public ResponseExerciseDTO handleSolveExercise(QueryExerciseDTO query) {
         // Salvar query em answer_student
         AnswerStudentCreateDTO dto = new AnswerStudentCreateDTO(query.query(), null, query.exerciseId(),query.studentId());
-        answerStudentService.save(dto);
+        AnswerStudent answerStudentSaved = answerStudentService.save(dto);
 
         // Recuperar query resposta de answer_professor/resposta pré cadastrada
         // String answerProfessor = answerProfessorService.getAnswerProfessorByExerciseId(query.exerciseId());
@@ -54,6 +55,10 @@ public class SolveExerciseService {
             List<Map<String, Object>> studentList = CompareAnswerService.resultSetToList(resultQueryStudent.resultSet);
             // Comparar resultados das duas queries
             boolean isIqual = CompareAnswerService.compareLists(answerList, studentList);
+            // Setar CORRETO/INCORRETO na resposta do ALUNO
+            // answerStudentSaved.setCorrect(isIqual);
+            // answerStudentService.update(answerStudentSaved);
+            // Formar DTO de retorno
             ResponseExerciseDTO res = new ResponseExerciseDTO(isIqual, studentList);
             // Fechar ResultSet e Statement após uso
             resultQueryStudent.close();
