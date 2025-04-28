@@ -7,6 +7,8 @@ public record ResponseExerciseDTO(
 
     boolean isCorrect,
 
-    List<Map<String, Object>> resultQuery
+    List<Map<String, Object>> resultQuery,
+
+    int rowsAffected
 
 ) {}
