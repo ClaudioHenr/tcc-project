@@ -27,6 +27,14 @@ public class Answer {
     @OneToOne
     private Exercise exercise;
 
+    private int typeExercise;
+
+    public Answer(String answer, Exercise exercise, int typeExercise) {
+        this.answer = answer;
+        this.exercise = exercise;
+        this.typeExercise = typeExercise;
+    }
+
     public Answer(String answer, Exercise exercise) {
         this.answer = answer;
         this.exercise = exercise;

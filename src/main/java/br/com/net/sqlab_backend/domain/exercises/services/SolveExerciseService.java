@@ -16,7 +16,6 @@ import br.com.net.sqlab_backend.domain.answer.services.AnswerService;
 import br.com.net.sqlab_backend.domain.exercises.dto.AnswerStudentCreateDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.QueryExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.ResponseExerciseDTO;
-import br.com.net.sqlab_backend.domain.exercises.models.AnswerStudent;
 import br.com.net.sqlab_backend.domain.exercises.models.QueryResult;
 
 @Service
@@ -35,31 +34,83 @@ public class SolveExerciseService {
     private AnswerService answerService;
 
     public ResponseExerciseDTO handleSolveExercise(QueryExerciseDTO query) {
+        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
         // Salvar query em answer_student
         AnswerStudentCreateDTO dto = new AnswerStudentCreateDTO(query.query(), null, query.exerciseId(),query.studentId());
-        AnswerStudent answerStudentSaved = answerStudentService.save(dto);
-
+        answerStudentService.save(dto);
         // Recuperar query resposta de answer_professor/resposta pré cadastrada
         // String answerProfessor = answerProfessorService.getAnswerProfessorByExerciseId(query.exerciseId());
         Answer answer = answerService.getByExerciseId(query.exerciseId());
         System.out.println(answer.getAnswer());
+        switch (answer.getTypeExercise()) {
+            case 1:
+                res = solveSelectExercise(query, answer.getAnswer());
+                return res;
+            case 2:
+                res = solveUpdateExercise(query, answer.getAnswer());
+                return res;
+            default:
+                return res;
+        }
+    }
 
+    public ResponseExerciseDTO solveUpdateExercise(QueryExerciseDTO query, String queryAnswer) {
+        // Criar 'ambientes'
+        Connection conn = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
+        Connection connAnswer = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
+
+        try {
+            // Executar as duas queries
+            QueryResult resultQueryStudent = executeQueryUpdateOrDelete(conn, query.query(), 0);
+            QueryResult resultQueryAnswer = executeQueryUpdateOrDelete(connAnswer, queryAnswer, 0);
+            int updateCount = resultQueryStudent.updateCount;
+            // Executar SELECT * pós UPDATE
+            QueryResult tableAfterUpdateStudent = executeQuerySelect(conn, "SELECT * FROM users", 0);
+            QueryResult tableAfterUpdateAnswer = executeQuerySelect(connAnswer, "SELECT * FROM users", 0);
+            List<Map<String, Object>> tableAfterUpdateStudentList = CompareAnswerService.resultSetToList(tableAfterUpdateStudent.resultSet);
+            List<Map<String, Object>> tableAfterUpdateAnswerList = CompareAnswerService.resultSetToList(tableAfterUpdateAnswer.resultSet);
+
+            // Comparar tabelas
+            boolean isEqual = CompareAnswerService.compareLists(tableAfterUpdateStudentList, tableAfterUpdateAnswerList);
+
+            // Formar DTO de retorno
+            ResponseExerciseDTO res = new ResponseExerciseDTO(isEqual, tableAfterUpdateStudentList, updateCount);
+
+            // Fechar ResultSet e Statement após uso
+            resultQueryStudent.close();
+            resultQueryAnswer.close();
+            tableAfterUpdateStudent.close();
+            tableAfterUpdateAnswer.close();
+            // Retornar
+            return res;
+        } catch (Exception e) {
+            System.err.println("Erro ao executar queries: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            environmentExerciseService.closeConnection(conn);
+        }
+        // Retornar
+        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
+        return res;
+    }
+
+    public ResponseExerciseDTO solveSelectExercise(QueryExerciseDTO query, String queryAnswer) {
         // Criar 'ambiente'
         Connection conn = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
 
         try {
             // Executar as duas queries
             QueryResult resultQueryStudent = executeQuerySelect(conn, query.query(), 0);
-            QueryResult resultQueryAnswer = executeQuerySelect(conn, answer.getAnswer(), 0);
+            QueryResult resultQueryAnswer = executeQuerySelect(conn, queryAnswer, 0);
             List<Map<String, Object>> answerList = CompareAnswerService.resultSetToList(resultQueryAnswer.resultSet);
             List<Map<String, Object>> studentList = CompareAnswerService.resultSetToList(resultQueryStudent.resultSet);
             // Comparar resultados das duas queries
-            boolean isIqual = CompareAnswerService.compareLists(answerList, studentList);
+            boolean isEqual = CompareAnswerService.compareLists(answerList, studentList);
             // Setar CORRETO/INCORRETO na resposta do ALUNO
             // answerStudentSaved.setCorrect(isIqual);
             // answerStudentService.update(answerStudentSaved);
             // Formar DTO de retorno
-            ResponseExerciseDTO res = new ResponseExerciseDTO(isIqual, studentList);
+            ResponseExerciseDTO res = new ResponseExerciseDTO(isEqual, studentList, 0);
             // Fechar ResultSet e Statement após uso
             resultQueryStudent.close();
             resultQueryAnswer.close();
@@ -73,7 +124,7 @@ public class SolveExerciseService {
         }
 
         // Retornar
-        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null);
+        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
         return res;
     }
 

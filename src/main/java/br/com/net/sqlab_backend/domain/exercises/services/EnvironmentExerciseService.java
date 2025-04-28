@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,9 @@ public class EnvironmentExerciseService {
 
     public Connection createConnection(Dialect dialect) {
         System.out.println("CRIANDO CONEXÃO COM DIALETO: " + dialect);
-        String url = "jdbc:h2:mem:db_exercise;MODE=" + dialect.getDescription();
+        Random random = new Random();
+        int codEnv = random.nextInt(1000);
+        String url = "jdbc:h2:mem:db_exercise" + codEnv + ";MODE=" + dialect.getDescription();
         System.out.println("URL: " + url);
         // String url = "jdbc:h2:file:./database_tests;DB_CLOSE_ON_EXIT=FALSE;" + dialect;
         try {
