@@ -33,4 +33,7 @@ public class AnswerStudentService {
         return answerStudentRepository.save(answerStudent);
     }
     
+    public AnswerStudent update(AnswerStudent entity) {
+        return answerStudentRepository.save(entity);
+    }
 }

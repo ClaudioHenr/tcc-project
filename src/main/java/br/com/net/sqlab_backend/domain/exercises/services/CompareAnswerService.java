@@ -100,6 +100,7 @@ public class CompareAnswerService {
         List<Map<String, Object>> resultList = new ArrayList<>();
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();
+        System.out.println("Quantidade de colunas: " + columnCount);
 
         while (rs.next()) {
             Map<String, Object> row = new HashMap<>();
@@ -110,5 +111,7 @@ public class CompareAnswerService {
         }
         return resultList;
     }
+
+    
 
 }
