@@ -61,8 +61,8 @@ public class SolveExerciseService {
 
         try {
             // Executar as duas queries
-            QueryResult resultQueryStudent = executeQueryUpdateOrDelete(conn, query.query(), 0);
-            QueryResult resultQueryAnswer = executeQueryUpdateOrDelete(connAnswer, queryAnswer, 0);
+            QueryResult resultQueryStudent = executeQueryInsertOrUpdateOrDelete(conn, query.query(), 0);
+            QueryResult resultQueryAnswer = executeQueryInsertOrUpdateOrDelete(connAnswer, queryAnswer, 0);
             int updateCount = resultQueryStudent.updateCount;
             // Executar SELECT * pós UPDATE
             QueryResult tableAfterUpdateStudent = executeQuerySelect(conn, "SELECT * FROM users", 0);
@@ -141,7 +141,7 @@ public class SolveExerciseService {
         }
     }
 
-    public QueryResult executeQueryUpdateOrDelete(Connection conn, String query, int typeQuery) {
+    public QueryResult executeQueryInsertOrUpdateOrDelete(Connection conn, String query, int typeQuery) {
         try {
             Statement stmt = conn.createStatement();
             int updateCount = stmt.executeUpdate(query);
