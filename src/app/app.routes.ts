@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { SignupComponent } from './authentication/signup/signup.component';
 import { StudentExerciceComponent } from './pages/student/student-exercice/student-exercice.component';
 import { StudentListComponent } from './pages/student/student-list/student-list.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
@@ -11,6 +10,7 @@ import { SelfRegistrationComponent } from './register/professor/self-registratio
 import { RegistrationComponent } from './register/student/registration/registration.component';
 import { ProfessorHomeComponent } from './pages/professor/professor-home/professor-home.component';
 import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './register/register.component';
 
 export const routes: Routes = [
     {
@@ -22,7 +22,6 @@ export const routes: Routes = [
         path: 'auth',
         component: AuthLayoutComponent,
         children: [
-            { path: 'signup', component: SignupComponent },
             { path: 'signin', component: SigninComponent }
         ]
     },
@@ -59,12 +58,12 @@ export const routes: Routes = [
     },
 
     {
-        path: 'register/professor',
-        component: SelfRegistrationComponent
-    },
-    {
-        path: 'register/student',
-        component : RegistrationComponent
+        path: 'register',
+        component: RegisterComponent,
+        children: [
+            { path: 'professor', component: SelfRegistrationComponent },  // Cadastro de professor
+            { path: 'student', component: RegistrationComponent }        // Cadastro de aluno
+        ]
     },
 
     {
