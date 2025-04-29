@@ -54,16 +54,23 @@ public class DataSeeder implements CommandLineRunner {
         Exercise exer02 = exerciseRepository.save(new Exercise(Dialect.MYSQL));
         Exercise exer03 = exerciseRepository.save(new Exercise(Dialect.POSTGRESQL));
         Exercise exer04 = exerciseRepository.save(new Exercise(Dialect.MYSQL));
+        Exercise exer05 = exerciseRepository.save(new Exercise(Dialect.MYSQL));
+        Exercise exer06 = exerciseRepository.save(new Exercise(Dialect.MYSQL));
+
         // Inserção de respostas
-        List<String> queries = Arrays.asList("UPDATE users SET name='Rosa' WHERE id=10;", "UPDATE users SET has_driver_license=TRUE WHERE age>29;", "SELECT * FROM users WHERE age > 30;", "SELECT SUM(CASE WHEN has_driver_license THEN 1 ELSE 0 END) FROM users;", "SELECT COUNT(*) AS contagem FROM users;", "SELECT SUM(age) FROM users;", "SELECT * FROM users WHERE age > 30;", "SELECT age, COUNT(*) FROM users GROUP BY age;");
+        List<String> queries = Arrays.asList("UPDATE users SET name='Rosa' WHERE id=10;", "DELETE FROM users WHERE age>29;", "INSERT INTO users (name, age, birth_date, has_driver_license) VALUES ('MAIS UM', 18, '1994-05-15', TRUE);", "SELECT * FROM users WHERE age > 30;", "SELECT SUM(CASE WHEN has_driver_license THEN 1 ELSE 0 END) FROM users;", "SELECT COUNT(*) AS contagem FROM users;", "SELECT SUM(age) FROM users;", "SELECT * FROM users WHERE age > 30;", "SELECT age, COUNT(*) FROM users GROUP BY age;");
         Answer answer01 = new Answer(queries.get(0), exer01, 2);
         Answer answer02 = new Answer(queries.get(1), exer02, 2);
-        Answer answer03 = new Answer(queries.get(2), exer03, 1);
+        Answer answer03 = new Answer(queries.get(2), exer03, 2);
         Answer answer04 = new Answer(queries.get(3), exer04, 1);
+        Answer answer05 = new Answer(queries.get(4), exer05, 1);
+        Answer answer06 = new Answer(queries.get(5), exer06, 1);
         answerRepository.save(answer01);
         answerRepository.save(answer02);
         answerRepository.save(answer03);
         answerRepository.save(answer04);
+        answerRepository.save(answer05);
+        answerRepository.save(answer06);
 
         // Criação de turma
         Grade grade01 = new Grade();
