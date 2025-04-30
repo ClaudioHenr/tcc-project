@@ -109,7 +109,7 @@ public class DataSeeder implements CommandLineRunner {
     public void connectStudentGrade(Long id, List<Grade> grades) {
         Set<Grade> setGrades = new HashSet<>(grades);
         Optional<Student> stu = studentRepository.findById(id);
-        stu.get().setGrade(setGrades);
+        // stu.get().setGrade(setGrades);
         studentRepository.save(stu.get());
     }
 
