@@ -11,6 +11,7 @@ import { RegistrationComponent } from './register/student/registration/registrat
 import { ProfessorHomeComponent } from './pages/professor/professor-home/professor-home.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
+import { ExerciseComponent } from './pages/professor/exercise/exercise.component';
 
 export const routes: Routes = [
     {
@@ -31,7 +32,8 @@ export const routes: Routes = [
         component: MainLayoutComponent, // trocar para main de professor ou criar um genérico
         children: [
             { path: '', redirectTo: 'home', pathMatch: 'full' },
-            { path: 'home', component: ProfessorHomeComponent }
+            { path: 'home', component: ProfessorHomeComponent },
+            { path: 'exercise', component: ExerciseComponent }
         ]
     },
 
