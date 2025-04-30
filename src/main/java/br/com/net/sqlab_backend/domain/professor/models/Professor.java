@@ -1,5 +1,8 @@
 package br.com.net.sqlab_backend.domain.professor.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import br.com.net.sqlab_backend.domain.models.Grade;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,7 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -28,9 +32,14 @@ public class Professor {
 
     @Column(name = "password", nullable = false)
     private String password;
-    @JoinColumn(name = "grade_id")
-    @ManyToOne
-    private Grade grade;
+	
+    @ManyToMany
+    @JoinTable(
+        name = "professor_grade",
+        joinColumns = @JoinColumn(name = "professor_id"),
+        inverseJoinColumns = @JoinColumn(name = "grade_id")
+    )
+    private Set<Grade> grades = new HashSet<>();
 
     private transient String confirmPassword;
 
@@ -66,12 +75,12 @@ public class Professor {
 		this.password = password;
 	}
 
-	public Grade getGrade() {
-		return grade;
+	public Set<Grade> getGrade() {
+		return grades;
 	}
 
-	public void setGrade(Grade grade) {
-		this.grade = grade;
+	public void setGrade(Set<Grade> grade) {
+		this.grades = grade;
 	}
 
 	public String getConfirmPassword() {

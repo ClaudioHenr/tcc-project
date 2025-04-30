@@ -1,9 +1,15 @@
 package br.com.net.sqlab_backend.domain.student.models;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+import br.com.net.sqlab_backend.domain.models.Grade;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "student")
 @Entity
 public class Student {
@@ -30,7 +36,24 @@ public class Student {
     @Transient
     private String confirmPassword;
 
-    
+    @ManyToMany
+    @JoinTable(
+        name = "student_grade",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "grade_id")
+    )
+    private Set<Grade> grades = new HashSet<>();
+   
+    public Student(String name, String email, String registrationNumber, String password, String confirmEmail,
+            String confirmPassword) {
+        this.name = name;
+        this.email = email;
+        this.registrationNumber = registrationNumber;
+        this.password = password;
+        this.confirmEmail = confirmEmail;
+        this.confirmPassword = confirmPassword;
+    }
+
     public Long getId() {
         return id;
     }
@@ -86,4 +109,13 @@ public class Student {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
+
+    public Set<Grade> getGrades() {
+        return grades;
+    }
+
+    public void setGrades(Set<Grade> grades) {
+        this.grades = grades;
+    }
+
 }
