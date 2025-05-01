@@ -1,12 +1,12 @@
-package br.com.net.sqlab_backend_authentication.controller;
+package br.com.net.sqlab_backend.authentication.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.net.sqlab_backend_authentication.dto.AuthRequest;
-import br.com.net.sqlab_backend_authentication.dto.AuthResponse;
-import br.com.net.sqlab_backend_authentication.service.AuthenticationService;
-import br.com.net.sqlab_backend_authentication.validation.AuthValidation;
+import br.com.net.sqlab_backend.authentication.dto.AuthRequest;
+import br.com.net.sqlab_backend.authentication.dto.AuthResponse;
+import br.com.net.sqlab_backend.authentication.service.AuthenticationService;
+import br.com.net.sqlab_backend.authentication.validation.AuthValidation;
 
 import java.util.List;
 

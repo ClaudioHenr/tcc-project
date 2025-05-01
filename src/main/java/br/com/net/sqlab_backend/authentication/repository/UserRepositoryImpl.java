@@ -1,4 +1,4 @@
-package br.com.net.sqlab_backend_authentication.repository;
+package br.com.net.sqlab_backend.authentication.repository;
 
 import br.com.net.sqlab_backend.domain.shared.models.UserEntity;
 import br.com.net.sqlab_backend.domain.student.repositories.StudentRepository;

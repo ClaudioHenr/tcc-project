@@ -1,9 +1,10 @@
-package br.com.net.sqlab_backend_authentication.validation;
+package br.com.net.sqlab_backend.authentication.validation;
 
-import br.com.net.sqlab_backend_authentication.dto.AuthRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import br.com.net.sqlab_backend.authentication.dto.AuthRequest;
 
 public class AuthValidation {
 

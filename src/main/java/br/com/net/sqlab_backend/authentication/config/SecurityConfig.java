@@ -1,4 +1,4 @@
-package br.com.net.sqlab_backend_authentication.config;
+package br.com.net.sqlab_backend.authentication.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

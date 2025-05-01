@@ -1,4 +1,4 @@
-package br.com.net.sqlab_backend_authentication.dto;
+package br.com.net.sqlab_backend.authentication.dto;
 
 public class AuthResponse {
 

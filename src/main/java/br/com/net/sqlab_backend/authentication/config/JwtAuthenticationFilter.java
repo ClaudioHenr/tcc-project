@@ -1,4 +1,4 @@
-package br.com.net.sqlab_backend_authentication.config;
+package br.com.net.sqlab_backend.authentication.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import br.com.net.sqlab_backend_authentication.service.JwtService;
+import br.com.net.sqlab_backend.authentication.service.JwtService;
 
 import java.io.IOException;
 

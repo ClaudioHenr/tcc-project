@@ -1,4 +1,4 @@
-package br.com.net.sqlab_backend_authentication.service;
+package br.com.net.sqlab_backend.authentication.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

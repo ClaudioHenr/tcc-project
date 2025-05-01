@@ -1,8 +1,9 @@
-package br.com.net.sqlab_backend_authentication.service;
+package br.com.net.sqlab_backend.authentication.service;
 
-import br.com.net.sqlab_backend_authentication.dto.AuthRequest;
-import br.com.net.sqlab_backend_authentication.dto.AuthResponse;
-import br.com.net.sqlab_backend_authentication.repository.UserRepository;
+import br.com.net.sqlab_backend.authentication.dto.AuthRequest;
+import br.com.net.sqlab_backend.authentication.dto.AuthResponse;
+import br.com.net.sqlab_backend.authentication.repository.UserRepository;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
