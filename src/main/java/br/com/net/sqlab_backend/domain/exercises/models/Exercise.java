@@ -40,5 +40,37 @@ public class Exercise {
         this.dialect = dialect;
     }
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Dialect getDialect() {
+		return dialect;
+	}
+
+	public void setDialect(Dialect dialect) {
+		this.dialect = dialect;
+	}
+
+	public Professor getProfessor() {
+		return professor;
+	}
+
+	public void setProfessor(Professor professor) {
+		this.professor = professor;
+	}
+
+	public ListExercise getListExercise() {
+		return listExercise;
+	}
+
+	public void setListExercise(ListExercise listExercise) {
+		this.listExercise = listExercise;
+	}
+
     
 }
