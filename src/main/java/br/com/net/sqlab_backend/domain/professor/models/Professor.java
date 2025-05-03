@@ -14,8 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -112,12 +111,12 @@ public class Professor implements UserEntity {
 		this.password = password;
 	}
 
-	public Set<Grade> getGrade() {
-		return grades;
+	public Grade getGrade() {
+		return grade;
 	}
 
-	public void setGrade(Set<Grade> grade) {
-		this.grades = grade;
+	public void setGrade(Grade grade) {
+		this.grade = grade;
 	}
 
 	public String getConfirmPassword() {

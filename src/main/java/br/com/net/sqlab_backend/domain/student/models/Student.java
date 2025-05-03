@@ -1,7 +1,9 @@
 package br.com.net.sqlab_backend.domain.student.models;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,10 +11,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import br.com.net.sqlab_backend.domain.shared.models.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
+import br.com.net.sqlab_backend.domain.models.Grade;
+
+//@NoArgsConstructor
+//@AllArgsConstructor
+@Data
 @Table(name = "student")
 @Entity
 public class Student  implements UserEntity  {
@@ -22,6 +28,9 @@ public class Student  implements UserEntity  {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public Student() {
+        // Construtor padrão necessário para o Jackson
+    }
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

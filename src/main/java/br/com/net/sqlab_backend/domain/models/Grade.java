@@ -85,5 +85,38 @@ public class Grade {
         return result;
     }
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public Set<ListExercise> getListExercises() {
+		return listExercises;
+	}
+
+	public void setListExercises(Set<ListExercise> listExercises) {
+		this.listExercises = listExercises;
+	}
+
+    
     
 }

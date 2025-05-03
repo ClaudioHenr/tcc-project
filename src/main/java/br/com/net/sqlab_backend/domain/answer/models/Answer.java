@@ -63,7 +63,16 @@ public class Answer {
 	public void setExercise(Exercise exercise) {
 		this.exercise = exercise;
 	}
+
+	public int getTypeExercise() {
+		return typeExercise;
+	}
+
+	public void setTypeExercise(int typeExercise) {
+		this.typeExercise = typeExercise;
+	}
     
+	
     
 
 }

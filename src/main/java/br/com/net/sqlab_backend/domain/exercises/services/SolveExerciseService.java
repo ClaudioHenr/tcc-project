@@ -24,8 +24,8 @@ public class SolveExerciseService {
     @Autowired
     private AnswerStudentService answerStudentService;
 
-    @Autowired
-    private AnswerProfessorService answerProfessorService;
+/*    @Autowired
+    private AnswerProfessorService answerProfessorService;*/
 
     @Autowired
     private EnvironmentExerciseService environmentExerciseService;
