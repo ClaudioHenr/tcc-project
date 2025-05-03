@@ -17,13 +17,13 @@ public class AnswerStudentService {
     @Autowired
     AnswerStudentRepository answerStudentRepository;
 
-    @Autowired
+     //@Autowired
     AnswerStudentMapper answerStudentMapper;
 
-    @Autowired
+    //@Autowired
     ExerciseService exerciseService;
 
-    @Autowired
+    //@Autowired
     StudentService studentService;
 
     public AnswerStudent save(AnswerStudentCreateDTO answerStudentCreateDTO) {

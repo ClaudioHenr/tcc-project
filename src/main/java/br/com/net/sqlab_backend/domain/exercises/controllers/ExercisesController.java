@@ -12,7 +12,7 @@ import br.com.net.sqlab_backend.domain.exercises.services.SolveExerciseService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@CrossOrigin
+//@CrossOrigin
 @RestController
 @RequestMapping("api/exercise")
 public class ExercisesController {

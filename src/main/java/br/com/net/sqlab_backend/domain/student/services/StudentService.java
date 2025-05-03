@@ -4,6 +4,7 @@ import br.com.net.sqlab_backend.domain.student.models.Student;
 import br.com.net.sqlab_backend.domain.student.repositories.StudentRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,10 +13,12 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-
+    private final PasswordEncoder passwordEncoder;
+    
     @Autowired
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Student getById(Long id) {
@@ -27,6 +30,7 @@ public class StudentService {
     }
     
     public Student saveStudent(Student student) {
+    	 student.setPassword(passwordEncoder.encode(student.getPassword()));
         return studentRepository.save(student);
     }
 
