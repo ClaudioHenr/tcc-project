@@ -2,12 +2,16 @@ package br.com.net.sqlab_backend.authentication.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -20,12 +24,15 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return buildToken(userDetails.getUsername());
+        return buildToken(userDetails.getUsername(), userDetails.getAuthorities());
     }
 
-    private String buildToken(String subject) {
+   private String buildToken(String subject, Collection<? extends GrantedAuthority> authorities) {
         return Jwts.builder()
                 .setSubject(subject)
+                .claim("roles", authorities.stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MILLIS))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

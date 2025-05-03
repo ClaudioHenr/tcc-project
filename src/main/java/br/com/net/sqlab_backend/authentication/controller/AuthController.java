@@ -1,5 +1,6 @@
 package br.com.net.sqlab_backend.authentication.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,9 @@ public class AuthController {
 
         try {
             AuthResponse response = authService.authenticate(request);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + response.getToken()) // Opcional: também no header
+                    .body(response);
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(List.of(e.getMessage()));
         }

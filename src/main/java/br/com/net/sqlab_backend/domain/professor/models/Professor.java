@@ -52,7 +52,7 @@ public class Professor implements UserEntity {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_PROFESSOR"));
     }
-
+    
     @Override
     public String getUsername() {
         return email;

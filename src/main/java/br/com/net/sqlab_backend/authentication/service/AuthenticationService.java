@@ -25,22 +25,18 @@ public class AuthenticationService {
 
     public AuthResponse authenticate(AuthRequest request) {
         try {
-            //autenticar com as credenciais
             authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
 
-            //buscar o usuário no repositório
             UserDetails user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas"));
 
             String token = jwtService.generateToken(user);
-
+            
             return new AuthResponse(token);
         } catch (BadCredentialsException e) {
             throw new RuntimeException("Email ou senha incorretos");
-        } catch (Exception e) {
-            throw new RuntimeException("Falha na autenticação: " + e.getMessage());
         }
     }
 }
