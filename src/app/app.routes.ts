@@ -13,6 +13,9 @@ import { ProfessorHomeComponent } from './pages/professor/professor-home/profess
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { ExerciseComponent } from './pages/professor/exercise/exercise.component';
+import { ExerciseListComponent } from './pages/professor/exercise-list/exercise-list.component';
+import { GradesComponent } from './pages/professor/grades/grades.component';
+import { ListsComponent } from './pages/professor/lists/lists.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { AppRoles } from './core/constants/roles.const.enum';
 
@@ -36,7 +39,10 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: ProfessorHomeComponent },
-      { path: 'exercise', component: ExerciseComponent }
+      { path: 'exercise', component: ExerciseComponent },
+      { path: 'exercise-list', component: ExerciseListComponent },
+      { path: 'grades', component: GradesComponent },
+      { path: 'lists', component: ListsComponent }
     ]
   },
   {
