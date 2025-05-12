@@ -69,7 +69,6 @@ public class SolveExerciseService {
             QueryResult tableAfterUpdateAnswer = executeQuerySelect(connAnswer, "SELECT * FROM users", 0);
             List<Map<String, Object>> tableAfterUpdateStudentList = CompareAnswerService.resultSetToList(tableAfterUpdateStudent.resultSet);
             List<Map<String, Object>> tableAfterUpdateAnswerList = CompareAnswerService.resultSetToList(tableAfterUpdateAnswer.resultSet);
-
             // Comparar tabelas
             boolean isEqual = CompareAnswerService.compareLists(tableAfterUpdateStudentList, tableAfterUpdateAnswerList);
 
