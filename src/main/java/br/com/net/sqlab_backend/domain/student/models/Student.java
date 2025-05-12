@@ -1,20 +1,37 @@
 package br.com.net.sqlab_backend.domain.student.models;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import br.com.net.sqlab_backend.domain.models.Grade;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import br.com.net.sqlab_backend.domain.shared.models.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
+import br.com.net.sqlab_backend.domain.models.Grade;
+
+//@NoArgsConstructor
+//@AllArgsConstructor
+@Data
 @Table(name = "student")
 @Entity
-public class Student {
+public class Student  implements UserEntity  {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public Student() {
+        // Construtor padrão necessário para o Jackson
+    }
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -86,9 +103,9 @@ public class Student {
         this.registrationNumber = registrationNumber;
     }
 
-    public String getPassword() {
-        return password;
-    }
+//    public String getPassword() {
+//        return password;
+//    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -109,6 +126,19 @@ public class Student {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
+    
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_STUDENT"));
+    }
+
+    @Override public String getUsername() { return email; }
+    @Override public String getPassword() { return password; }
+
+    @Override public boolean isAccountNonExpired() { return true; }
+    @Override public boolean isAccountNonLocked() { return true; }
+    @Override public boolean isCredentialsNonExpired() { return true; }
+    @Override public boolean isEnabled() { return true; }
 
     public Set<Grade> getGrades() {
         return grades;

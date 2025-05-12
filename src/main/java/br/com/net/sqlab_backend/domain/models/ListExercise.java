@@ -30,4 +30,38 @@ public class ListExercise {
     @OneToMany(mappedBy = "listExercise")
     private Set<Exercise> exercises = new HashSet<>();
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Set<Exercise> getExercises() {
+		return exercises;
+	}
+
+	public void setExercises(Set<Exercise> exercises) {
+		this.exercises = exercises;
+	}
+    
+    
+
 }
