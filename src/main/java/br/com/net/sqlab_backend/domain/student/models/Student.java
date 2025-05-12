@@ -21,7 +21,7 @@ import br.com.net.sqlab_backend.domain.models.Grade;
 @Data
 @Table(name = "student")
 @Entity
-public class Student  implements UserEntity  {
+public class Student implements UserEntity  {
 
     /**
 	 * 

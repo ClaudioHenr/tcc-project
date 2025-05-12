@@ -41,7 +41,7 @@ public class Grade {
         joinColumns = @JoinColumn(name = "grade_id"),
         inverseJoinColumns = @JoinColumn(name = "list_exercise_id")
     )
-    private Set<ListExercise> listExercises = new HashSet<>();
+    private Set<ListExercise> listExercises = new HashSet<>();   
 
     @Override
     public boolean equals(Object obj) {

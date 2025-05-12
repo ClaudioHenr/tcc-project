@@ -1,7 +1,9 @@
 package br.com.net.sqlab_backend.domain.professor.models;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +16,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -41,11 +44,15 @@ public class Professor implements UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @JoinColumn(name = "grade_id")
-    @ManyToOne
-    private Grade grade;
-
     private transient String confirmPassword;
+
+	@ManyToMany
+    @JoinTable(
+        name = "professor_grade",
+        joinColumns = @JoinColumn(name = "professor_id"),
+        inverseJoinColumns = @JoinColumn(name = "grade_id")
+    )
+    private Set<Grade> grades = new HashSet<>(); 
 
     // Implementações de UserDetails (via UserEntity)
     @Override
@@ -111,13 +118,13 @@ public class Professor implements UserEntity {
 		this.password = password;
 	}
 
-	public Grade getGrade() {
-		return grade;
-	}
+	// public Grade getGrade() {
+	// 	return grade;
+	// }
 
-	public void setGrade(Grade grade) {
-		this.grade = grade;
-	}
+	// public void setGrade(Grade grade) {
+	// 	this.grade = grade;
+	// }
 
 	public String getConfirmPassword() {
 		return confirmPassword;
