@@ -27,14 +27,6 @@ public class Answer {
     @OneToOne
     private Exercise exercise;
 
-    private int typeExercise;
-
-    public Answer(String answer, Exercise exercise, int typeExercise) {
-        this.answer = answer;
-        this.exercise = exercise;
-        this.typeExercise = typeExercise;
-    }
-
     public Answer(String answer, Exercise exercise) {
         this.answer = answer;
         this.exercise = exercise;
@@ -63,16 +55,5 @@ public class Answer {
 	public void setExercise(Exercise exercise) {
 		this.exercise = exercise;
 	}
-
-	public int getTypeExercise() {
-		return typeExercise;
-	}
-
-	public void setTypeExercise(int typeExercise) {
-		this.typeExercise = typeExercise;
-	}
-    
-	
-    
 
 }

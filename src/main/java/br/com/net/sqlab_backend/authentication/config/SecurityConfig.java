@@ -21,7 +21,7 @@ public class SecurityConfig {
 		return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(
-						authorize -> authorize.requestMatchers("/auth/**", "/professors/create", "/students/create")
+						authorize -> authorize.requestMatchers("/auth/**", "/professors/create", "/students/create", "/api/exercise/solve")
 								.permitAll().anyRequest().authenticated())
 				.build();
 	}

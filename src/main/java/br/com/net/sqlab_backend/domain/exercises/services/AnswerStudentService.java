@@ -1,10 +1,8 @@
 package br.com.net.sqlab_backend.domain.exercises.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.net.sqlab_backend.domain.exercises.dto.AnswerStudentCreateDTO;
-import br.com.net.sqlab_backend.domain.exercises.mapper.AnswerStudentMapper;
 import br.com.net.sqlab_backend.domain.exercises.models.AnswerStudent;
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.repositories.AnswerStudentRepository;
@@ -14,17 +12,17 @@ import br.com.net.sqlab_backend.domain.student.services.StudentService;
 @Service
 public class AnswerStudentService {
 
-    @Autowired
-    AnswerStudentRepository answerStudentRepository;
+    private AnswerStudentRepository answerStudentRepository;
 
-     //@Autowired
-    AnswerStudentMapper answerStudentMapper;
+    private ExerciseService exerciseService;
 
-    //@Autowired
-    ExerciseService exerciseService;
+    private StudentService studentService;
 
-    //@Autowired
-    StudentService studentService;
+    public AnswerStudentService(AnswerStudentRepository answerStudentRepository, ExerciseService exerciseService, StudentService studentService) {
+        this.answerStudentRepository = answerStudentRepository;
+        this.exerciseService = exerciseService;
+        this.studentService = studentService;
+    }
 
     public AnswerStudent save(AnswerStudentCreateDTO answerStudentCreateDTO) {
         Exercise exercise = exerciseService.getById(answerStudentCreateDTO.exerciseId());

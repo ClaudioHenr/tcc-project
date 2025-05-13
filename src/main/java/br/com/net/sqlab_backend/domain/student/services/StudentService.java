@@ -1,9 +1,9 @@
 package br.com.net.sqlab_backend.domain.student.services;
 
+import br.com.net.sqlab_backend.domain.exceptions.custom.EntityNotFoundException;
 import br.com.net.sqlab_backend.domain.student.models.Student;
 import br.com.net.sqlab_backend.domain.student.repositories.StudentRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,6 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
     
-    @Autowired
     public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
@@ -24,7 +23,7 @@ public class StudentService {
     public Student getById(Long id) {
         Optional<Student> student = studentRepository.findById(id);
         if (student.isEmpty()) {
-            throw new RuntimeException("Estudante não encontrado...");
+            throw new EntityNotFoundException("Estudante não encontrado...");
         }
         return student.get();
     }

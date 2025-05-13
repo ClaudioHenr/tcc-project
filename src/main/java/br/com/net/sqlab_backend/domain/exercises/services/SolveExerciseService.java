@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.net.sqlab_backend.domain.answer.models.Answer;
@@ -16,41 +15,50 @@ import br.com.net.sqlab_backend.domain.answer.services.AnswerService;
 import br.com.net.sqlab_backend.domain.exercises.dto.AnswerStudentCreateDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.QueryExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.ResponseExerciseDTO;
+import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.models.QueryResult;
 
 @Service
 public class SolveExerciseService {
 
-    @Autowired
     private AnswerStudentService answerStudentService;
 
 /*    @Autowired
     private AnswerProfessorService answerProfessorService;*/
 
-    @Autowired
+    private ExerciseService exerciseService;
+
     private EnvironmentExerciseService environmentExerciseService;
 
-    @Autowired
     private AnswerService answerService;
+
+    public SolveExerciseService(AnswerStudentService answerStudentService, ExerciseService exerciseService,
+            EnvironmentExerciseService environmentExerciseService, AnswerService answerService) {
+        this.answerStudentService = answerStudentService;
+        this.exerciseService = exerciseService;
+        this.environmentExerciseService = environmentExerciseService;
+        this.answerService = answerService;
+    }
 
     public ResponseExerciseDTO handleSolveExercise(QueryExerciseDTO query) {
         ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
         // Salvar query em answer_student
-        AnswerStudentCreateDTO dto = new AnswerStudentCreateDTO(query.query(), null, query.exerciseId(),query.studentId());
+        AnswerStudentCreateDTO dto = new AnswerStudentCreateDTO(query.query(), null, query.exerciseId(), query.studentId());
         answerStudentService.save(dto);
         // Recuperar query resposta de answer_professor/resposta pré cadastrada
         // String answerProfessor = answerProfessorService.getAnswerProfessorByExerciseId(query.exerciseId());
         Answer answer = answerService.getByExerciseId(query.exerciseId());
-        System.out.println(answer.getAnswer());
-        switch (answer.getTypeExercise()) {
-            case 1:
+        Exercise exercise = exerciseService.getById(query.exerciseId());
+        // System.out.println("TIPO DE EXERCÍCIO: " + exercise.getType());
+        switch (exercise.getType()) {
+            case SELECT:
                 res = solveSelectExercise(query, answer.getAnswer());
                 return res;
-            case 2:
+            case UPDATE:
                 res = solveUpdateExercise(query, answer.getAnswer());
                 return res;
             default:
-                return res;
+                throw new IllegalArgumentException("Tipo de exercício desconhecido: " + exercise.getType());
         }
     }
 
