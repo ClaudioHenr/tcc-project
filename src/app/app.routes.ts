@@ -34,8 +34,8 @@ export const routes: Routes = [
   {
     path: 'professor',
     component: MainLayoutComponent,
-    canActivate: [authGuard, roleGuard],
-    data: { role: AppRoles.PROFESSOR },
+    // canActivate: [authGuard, roleGuard],
+    // data: { role: AppRoles.PROFESSOR },
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: ProfessorHomeComponent },
@@ -48,18 +48,13 @@ export const routes: Routes = [
   {
     path: 'student',
     component: MainLayoutComponent,
-    canActivate: [authGuard, roleGuard],
-    data: { role: AppRoles.STUDENT },
+    // canActivate: [authGuard, roleGuard],
+    // data: { role: AppRoles.STUDENT },
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { 
-        path: 'home', 
-        component: StudentHomeComponent,
-        children: [
-          { path: 'list', component: StudentListComponent },
-          { path: 'exercise', component: StudentExerciceComponent }
-        ]
-      },
+      { path: 'home', component: StudentHomeComponent },
+      { path: 'list', component: StudentListComponent },
+      { path: 'exercise', component: StudentExerciceComponent }
     ]
   },
   {

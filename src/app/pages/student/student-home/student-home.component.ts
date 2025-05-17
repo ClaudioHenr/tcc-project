@@ -19,8 +19,8 @@ type CardInfo = {
 })
 export class StudentHomeComponent {
   cardsInfo: CardInfo[] = [
-    { title: "Turma", description: "Navegue entre suas turmas", route: "/student/grades" },
-    { title: "Lista", description: "Procure lista de exercícios para realizar!", route: "/student/lists" }
+    { title: "Turmas", description: "Navegue entre suas turmas", route: "/student/grades" },
+    { title: "Listas", description: "Procure lista de exercícios para realizar!", route: "/student/lists" }
   ]
 
 }
