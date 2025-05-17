@@ -124,9 +124,7 @@ public class CompareAnswerService {
                 System.out.println("Diferença em default na coluna " + studentColumn.get("name"));
                 return false;
             }
-
         }
-
         return true;
     }
 
@@ -196,7 +194,6 @@ public class CompareAnswerService {
         return resultList;
     }
     
-
     public static void printIndexResult(DatabaseMetaData metaData, String tableName) throws SQLException {
         try (ResultSet resultSet = metaData.getIndexInfo(null, null, tableName, false, false)) {
             while (resultSet.next()) {
