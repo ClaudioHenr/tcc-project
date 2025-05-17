@@ -1,7 +1,11 @@
 package br.com.net.sqlab_backend.domain.exercises.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import br.com.net.sqlab_backend.domain.exercises.enums.Dialect;
 import br.com.net.sqlab_backend.domain.exercises.enums.ExerciseType;
+import br.com.net.sqlab_backend.domain.models.AnswerProfessor;
 import br.com.net.sqlab_backend.domain.models.ListExercise;
 import br.com.net.sqlab_backend.domain.professor.models.Professor;
 import jakarta.persistence.Column;
@@ -13,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,6 +45,12 @@ public class Exercise {
 
 	@Column
 	private Boolean isPublic;
+
+	@Column
+	private String tableName;
+
+	@OneToMany
+	private Set<AnswerProfessor> answers = new HashSet<>();
 
     @JoinColumn(name = "professor_id")
     @ManyToOne

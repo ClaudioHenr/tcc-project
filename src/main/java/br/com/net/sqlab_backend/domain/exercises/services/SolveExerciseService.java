@@ -1,8 +1,8 @@
 package br.com.net.sqlab_backend.domain.exercises.services;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -10,34 +10,30 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import br.com.net.sqlab_backend.domain.answer.models.Answer;
-import br.com.net.sqlab_backend.domain.answer.services.AnswerService;
 import br.com.net.sqlab_backend.domain.exercises.dto.AnswerStudentCreateDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.QueryExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.ResponseExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.models.QueryResult;
+import br.com.net.sqlab_backend.domain.models.AnswerProfessor;
 
 @Service
 public class SolveExerciseService {
 
     private AnswerStudentService answerStudentService;
 
-/*    @Autowired
-    private AnswerProfessorService answerProfessorService;*/
+    private AnswerProfessorService answerProfessorService;
 
     private ExerciseService exerciseService;
 
     private EnvironmentExerciseService environmentExerciseService;
 
-    private AnswerService answerService;
-
     public SolveExerciseService(AnswerStudentService answerStudentService, ExerciseService exerciseService,
-            EnvironmentExerciseService environmentExerciseService, AnswerService answerService) {
+            EnvironmentExerciseService environmentExerciseService, AnswerProfessorService answerProfessorService) {
         this.answerStudentService = answerStudentService;
         this.exerciseService = exerciseService;
         this.environmentExerciseService = environmentExerciseService;
-        this.answerService = answerService;
+        this.answerProfessorService = answerProfessorService;
     }
 
     public ResponseExerciseDTO handleSolveExercise(QueryExerciseDTO query) {
@@ -46,35 +42,133 @@ public class SolveExerciseService {
         AnswerStudentCreateDTO dto = new AnswerStudentCreateDTO(query.query(), null, query.exerciseId(), query.studentId());
         answerStudentService.save(dto);
         // Recuperar query resposta de answer_professor/resposta pré cadastrada
-        // String answerProfessor = answerProfessorService.getAnswerProfessorByExerciseId(query.exerciseId());
-        Answer answer = answerService.getByExerciseId(query.exerciseId());
+        AnswerProfessor answer = answerProfessorService.getByExerciseId(query.exerciseId());
         Exercise exercise = exerciseService.getById(query.exerciseId());
-        // System.out.println("TIPO DE EXERCÍCIO: " + exercise.getType());
         switch (exercise.getType()) {
             case SELECT:
                 res = solveSelectExercise(query, answer.getAnswer());
                 return res;
             case UPDATE:
-                res = solveUpdateExercise(query, answer.getAnswer());
+                res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
+                return res;
+            case INSERT:
+                res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
+                return res;
+            case DELETE:
+                res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
+                return res;
+            case CREATE:
+                res = solveCreateExercise(query, answer.getAnswer(), exercise.getTableName());
+                return res;
+            case DROP:
+                res = solveDropExercise(query, answer.getAnswer(), exercise.getTableName());
+                return res;
+            case ALTER:
+                res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
                 return res;
             default:
                 throw new IllegalArgumentException("Tipo de exercício desconhecido: " + exercise.getType());
         }
     }
 
-    public ResponseExerciseDTO solveUpdateExercise(QueryExerciseDTO query, String queryAnswer) {
+    public ResponseExerciseDTO solveCreateExercise(QueryExerciseDTO query, String queryAnswer, String tableName) {
+        String querySelect = "SELECT * FROM " + tableName;
         // Criar 'ambientes'
         Connection conn = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
         Connection connAnswer = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
 
         try {
             // Executar as duas queries
-            QueryResult resultQueryStudent = executeQueryInsertOrUpdateOrDelete(conn, query.query(), 0);
-            QueryResult resultQueryAnswer = executeQueryInsertOrUpdateOrDelete(connAnswer, queryAnswer, 0);
+            QueryResult resultQueryStudent = executeQueryCreate(conn, query.query());
+            QueryResult resultQueryAnswer = executeQueryCreate(connAnswer, queryAnswer);
+            int updateCount = resultQueryStudent.updateCount;
+            // Executar SELECT *
+            QueryResult tableCreatedStudent = executeQuerySelect(conn, querySelect);        
+
+            DatabaseMetaData metaData = conn.getMetaData();
+            DatabaseMetaData metaDataAnswer = connAnswer.getMetaData();
+
+            List<Map<String, Object>> schemaStudent = CompareAnswerService.getColumnSchema(metaData, tableName);
+            List<Map<String, Object>> schemaAnswer = CompareAnswerService.getColumnSchema(metaDataAnswer, tableName);
+            
+            // Comparar schemas
+            boolean isEqual = CompareAnswerService.compareTableSchemas(schemaStudent, schemaAnswer);
+            
+            List<Map<String, Object>> tableAfterUpdateStudentList = CompareAnswerService.resultSetToList(tableCreatedStudent.resultSet);
+            // Formar DTO de retorno
+            ResponseExerciseDTO res = new ResponseExerciseDTO(isEqual, tableAfterUpdateStudentList, updateCount);
+
+            // Fechar ResultSet e Statement após uso
+            resultQueryStudent.close();
+            resultQueryAnswer.close();
+            tableCreatedStudent.close();
+            // Retornar
+            return res;
+        } catch (Exception e) {
+            System.err.println("Erro ao executar queries: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            environmentExerciseService.closeConnection(conn);
+        }
+        // Retornar
+        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
+        return res;
+    }
+
+    public ResponseExerciseDTO solveDropExercise(QueryExerciseDTO query, String queryAnswer, String tableName) {
+        boolean isCorrect;
+        Connection conn = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
+        Connection connAnswer = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
+
+        try {
+            // Executar as duas queries
+            QueryResult resultQueryStudent = executeQueryInsertOrUpdateOrDelete(conn, query.query());
+            QueryResult resultQueryAnswer = executeQueryInsertOrUpdateOrDelete(connAnswer, queryAnswer);
+
+            boolean existsTableAfterQueryStudent = existsTable(conn, tableName);
+            boolean existsTableAfterQueryAnswer = existsTable(connAnswer, tableName);
+            System.out.println(existsTableAfterQueryStudent);
+            System.out.println(existsTableAfterQueryAnswer);
+            if (!existsTableAfterQueryStudent && !existsTableAfterQueryAnswer) {
+                System.out.println("Tabelas excluidas com sucesso.....");
+                isCorrect = true;
+            } else {
+                isCorrect = false;
+            }
+
+            // Fechar ResultSet e Statement após uso
+            resultQueryStudent.close();
+            resultQueryAnswer.close();
+            // Retornar
+            ResponseExerciseDTO res = new ResponseExerciseDTO(isCorrect, null, 0);
+            return res;
+        } catch (Exception e) {
+            System.err.println("Erro ao executar queries: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            environmentExerciseService.closeConnection(conn);
+        }
+
+        // Conferir se tabela continua a existir
+
+        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
+        return res;
+    }
+
+    public ResponseExerciseDTO solveUpdateExercise(QueryExerciseDTO query, String queryAnswer, String tableName) {
+        String querySelect = "SELECT * FROM " + tableName;
+        // Criar 'ambientes'
+        Connection conn = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
+        Connection connAnswer = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
+
+        try {
+            // Executar as duas queries
+            QueryResult resultQueryStudent = executeQueryInsertOrUpdateOrDelete(conn, query.query());
+            QueryResult resultQueryAnswer = executeQueryInsertOrUpdateOrDelete(connAnswer, queryAnswer);
             int updateCount = resultQueryStudent.updateCount;
             // Executar SELECT * pós UPDATE
-            QueryResult tableAfterUpdateStudent = executeQuerySelect(conn, "SELECT * FROM users", 0);
-            QueryResult tableAfterUpdateAnswer = executeQuerySelect(connAnswer, "SELECT * FROM users", 0);
+            QueryResult tableAfterUpdateStudent = executeQuerySelect(conn, querySelect);
+            QueryResult tableAfterUpdateAnswer = executeQuerySelect(connAnswer, querySelect);
             List<Map<String, Object>> tableAfterUpdateStudentList = CompareAnswerService.resultSetToList(tableAfterUpdateStudent.resultSet);
             List<Map<String, Object>> tableAfterUpdateAnswerList = CompareAnswerService.resultSetToList(tableAfterUpdateAnswer.resultSet);
             // Comparar tabelas
@@ -107,8 +201,8 @@ public class SolveExerciseService {
 
         try {
             // Executar as duas queries
-            QueryResult resultQueryStudent = executeQuerySelect(conn, query.query(), 0);
-            QueryResult resultQueryAnswer = executeQuerySelect(conn, queryAnswer, 0);
+            QueryResult resultQueryStudent = executeQuerySelect(conn, query.query());
+            QueryResult resultQueryAnswer = executeQuerySelect(conn, queryAnswer);
             List<Map<String, Object>> answerList = CompareAnswerService.resultSetToList(resultQueryAnswer.resultSet);
             List<Map<String, Object>> studentList = CompareAnswerService.resultSetToList(resultQueryStudent.resultSet);
             // Comparar resultados das duas queries
@@ -135,8 +229,16 @@ public class SolveExerciseService {
         return res;
     }
 
-    // Executa a query e mantém o Statement aberto
-    public QueryResult executeQuerySelect(Connection conn, String query, int typeQuery) {
+    public boolean existsTable(Connection conn, String tableName) throws SQLException {
+        DatabaseMetaData meta = conn.getMetaData();
+        try (ResultSet resultSet = meta.getTables(null, null, tableName.toUpperCase(), new String[]{"TABLE"})) {
+            return resultSet.next();
+        }
+    }
+
+    // EXECUÇÃO DE QUERIES
+
+    public QueryResult executeQuerySelect(Connection conn, String query) {
         try {
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery(query);
@@ -148,11 +250,11 @@ public class SolveExerciseService {
         }
     }
 
-    public QueryResult executeQueryInsertOrUpdateOrDelete(Connection conn, String query, int typeQuery) {
+    public QueryResult executeQueryInsertOrUpdateOrDelete(Connection conn, String query) {
         try {
             Statement stmt = conn.createStatement();
             int updateCount = stmt.executeUpdate(query);
-            System.out.println("Query de update ou delete executada com sucesso, linhas afetadas: " + updateCount);
+            System.out.println("Query DML executada com sucesso, linhas afetadas: " + updateCount);
             return new QueryResult(stmt, updateCount);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -160,24 +262,16 @@ public class SolveExerciseService {
         }
     }
 
-    public void printQuery(ResultSet result) {
-        System.out.println("======== PRINT DE QUERY ========");
-        StringBuilder resultString = new StringBuilder();
-        try {            
-            ResultSetMetaData resultMetaData = result.getMetaData();
-            while (result.next()) {  // Percorre as linhas do resultado
-                for (int i = 1; i <= resultMetaData.getColumnCount(); i++) {
-                    String columnName = resultMetaData.getColumnName(i);
-                    String columnValue = result.getString(columnName); // Pega o valor da coluna
-        
-                    System.out.println(columnName + ": " + columnValue);
-                    resultString.append(columnName).append(": ").append(columnValue).append("\n");
-                }
-                resultString.append("\n"); // Separação entre registros
-            }
-        } catch (Exception e) {
+    public QueryResult executeQueryCreate(Connection conn, String query) {
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute(query);
+            System.out.println("Query CREATE executada com sucesso");
+            return new QueryResult(stmt, 0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao executar a query SQL: " + e.getMessage());
         }
-        System.out.println(resultString.toString());
     }
-   
+
 }

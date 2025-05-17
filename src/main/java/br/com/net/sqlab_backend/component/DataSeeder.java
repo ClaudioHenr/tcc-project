@@ -7,11 +7,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import br.com.net.sqlab_backend.domain.answer.models.Answer;
-import br.com.net.sqlab_backend.domain.answer.repositories.AnswerRepository;
 import br.com.net.sqlab_backend.domain.exercises.enums.Dialect;
 import br.com.net.sqlab_backend.domain.exercises.enums.ExerciseType;
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
+import br.com.net.sqlab_backend.domain.exercises.repositories.AnswerProfessorRepository;
 import br.com.net.sqlab_backend.domain.exercises.repositories.ExerciseRepository;
 import br.com.net.sqlab_backend.domain.models.ListExercise;
 import br.com.net.sqlab_backend.domain.professor.models.Professor;
@@ -25,13 +24,14 @@ import br.com.net.sqlab_backend.domain.student.repositories.StudentRepository;
 public class DataSeeder implements CommandLineRunner {
 
     private final ExerciseRepository exerciseRepository;
-    private final AnswerRepository answerRepository;
+    private final AnswerProfessorRepository answerRepository;
     private final StudentRepository studentRepository;
     private final GradeRepository gradeRepository;
     private final ListExerciseRepository listExerciseRepository;
     
-    public DataSeeder(ExerciseRepository exerciseRepository, AnswerRepository answerRepository,
-            StudentRepository studentRepository, GradeRepository gradeRepository, ListExerciseRepository listExerciseRepository) {
+    public DataSeeder(ExerciseRepository exerciseRepository, AnswerProfessorRepository answerRepository,
+            StudentRepository studentRepository, GradeRepository gradeRepository,
+            ListExerciseRepository listExerciseRepository) {
         this.exerciseRepository = exerciseRepository;
         this.answerRepository = answerRepository;
         this.studentRepository = studentRepository;
@@ -87,10 +87,5 @@ public class DataSeeder implements CommandLineRunner {
     public void insertIntoExercise(Exercise exercise) {
         exerciseRepository.save(exercise);
     }
-
-    public void insertIntoAnswer(Answer answer) {
-        answerRepository.save(answer);
-    }
-
 
 }
