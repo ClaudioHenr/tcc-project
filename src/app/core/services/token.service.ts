@@ -60,4 +60,10 @@ export class TokenService {
     const role = decoded?.roles?.[0];
     return role ? role as AppRoles : null;
   }
+
+  getUserId(): number | null {
+    const decoded = this.decodeToken();
+    const id = decoded?.id;
+    return typeof id === 'number' ? id : null;
+  }
 }

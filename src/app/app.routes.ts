@@ -18,6 +18,8 @@ import { GradesComponent } from './pages/professor/grades/grades.component';
 import { ListsComponent } from './pages/professor/lists/lists.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { AppRoles } from './core/constants/roles.const.enum';
+import { StudentGradeComponent } from './pages/student/student-grade/student-grade.component';
+import { StudentCatalogExercisesComponent } from './pages/student/student-catalog-exercises/student-catalog-exercises.component';
 
 export const routes: Routes = [
   {
@@ -53,8 +55,10 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: StudentHomeComponent },
-      { path: 'list', component: StudentListComponent },
-      { path: 'exercise', component: StudentExerciceComponent }
+      { path: 'grades', component: StudentGradeComponent },
+      { path: 'lists/:id', component: StudentListComponent },
+      { path: 'catalog-exercises/:id', component: StudentCatalogExercisesComponent },
+      { path: 'exercise/:id', component: StudentExerciceComponent }
     ]
   },
   {

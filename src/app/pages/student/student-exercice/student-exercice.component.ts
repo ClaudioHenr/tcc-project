@@ -1,7 +1,15 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import * as ace from 'ace-builds';
-import { ExerciseService } from '../services/exercise.service';
+import { ExerciseService } from '../services/exercise/exercise.service';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+
+interface Exercise {
+  id: string;
+  description: string;
+  dialect: string;
+  type: string
+}
 
 interface QueryExercise {
   studentId: string;
@@ -23,17 +31,31 @@ interface ResponseExercise {
   templateUrl: './student-exercice.component.html',
   styleUrl: './student-exercice.component.css'
 })
-export class StudentExerciceComponent implements AfterViewInit {
+export class StudentExerciceComponent implements OnInit, AfterViewInit {
+  protected studentId: string | null = '';
+  protected exerciseId: string | null = '';
+  protected exerciseInfo!: Exercise;
+  protected queryExercise!: QueryExercise;
+  responseExercise!: ResponseExercise;
+
   imageUrl = ''; // Se quiser usar uma imagem, coloque a URL aqui
   private editor: ace.Ace.Editor | undefined;
-  private queryExercise: QueryExercise = {"studentId": "1", "exerciseId": "3", "query": ""};
-  responseExercise!: ResponseExercise;
 
   errorMessage: string = '';
 
   constructor(
-    private exerciseService: ExerciseService
+    private exerciseService: ExerciseService,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit(): void {
+    this.studentId = "1";
+
+    this.exerciseId = this.route.snapshot.paramMap.get("id");
+    if (this.exerciseId) {
+      this.getExerciseInfo(this.exerciseId);
+    }
+  }
 
   ngAfterViewInit(): void {
     ace.config.set('basePath', 'https://unpkg.com/ace-builds@1.4.12/src-noconflict');
@@ -45,8 +67,6 @@ export class StudentExerciceComponent implements AfterViewInit {
       wrap: true,
       showPrintMargin: false
     });
-
-    aceEditor.setValue("SELECT * FROM users WHERE age > 30;");
 
     this.editor = aceEditor;
   }
@@ -62,23 +82,44 @@ export class StudentExerciceComponent implements AfterViewInit {
     return [];
   }
 
-  enviarResposta(): void {
+  getExerciseInfo(id: string) {
+    this.exerciseService.getExercise(id).subscribe({
+      next: (data: any) => {
+        this.exerciseInfo = data;
+        console.log(data)
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
+  }
+
+  sendAnswer(): void {
     const respostaSQL = this.editor?.getValue() || '';
-    console.log('Resposta enviada:', respostaSQL);
 
     if (!respostaSQL.trim()) {
       alert('Por favor, escreva uma resposta antes de enviar.');
       return;
     }
-    this.queryExercise.query = respostaSQL
-    this.exerciseService.sentAnswer(this.queryExercise).subscribe({
-      next: (data: ResponseExercise) => {
-        this.responseExercise = data;
-      },
-      error: (err: any) => {
-        this.errorMessage = err;
-      }
-    });
+
+    if (this.exerciseId && this.studentId) {
+      const queryExercise: QueryExercise = {
+        studentId: this.studentId,
+        exerciseId: this.exerciseId,
+        query: respostaSQL
+      };
+
+      this.exerciseService.sentAnswer(queryExercise).subscribe({
+        next: (data: ResponseExercise) => {
+          this.responseExercise = data;
+        },
+        error: (err: any) => {
+          this.errorMessage = err;
+        }
+      });
+    } else {
+      console.error("Não é possível enviar resposta por falta de parametros obrigatórios");
+    }
   }
 
 }
