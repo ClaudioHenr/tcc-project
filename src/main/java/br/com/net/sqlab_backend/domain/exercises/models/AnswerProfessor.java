@@ -1,6 +1,5 @@
-package br.com.net.sqlab_backend.domain.models;
+package br.com.net.sqlab_backend.domain.exercises.models;
 
-import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.professor.models.Professor;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

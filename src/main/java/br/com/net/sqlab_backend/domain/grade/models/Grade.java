@@ -1,8 +1,9 @@
-package br.com.net.sqlab_backend.domain.models;
+package br.com.net.sqlab_backend.domain.grade.models;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import br.com.net.sqlab_backend.domain.models.ListExercise;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

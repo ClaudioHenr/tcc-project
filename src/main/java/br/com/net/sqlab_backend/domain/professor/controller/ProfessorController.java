@@ -1,5 +1,6 @@
 package br.com.net.sqlab_backend.domain.professor.controller;
 
+import br.com.net.sqlab_backend.domain.grade.models.Grade;
 import br.com.net.sqlab_backend.domain.professor.models.Professor;
 import br.com.net.sqlab_backend.domain.professor.services.ProfessorService;
 import br.com.net.sqlab_backend.domain.professor.validation.ProfessorValidation;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/professors")
@@ -36,5 +39,14 @@ public class ProfessorController {
 
         Professor savedProfessor = professorService.saveProfessor(professor);
         return new ResponseEntity<>(savedProfessor, HttpStatus.CREATED);
+    }    
+
+
+    @GetMapping("/grades")
+    public ResponseEntity<?> getGrades(@RequestParam Long id) {
+        List<Grade> grades = professorService.getGrades(id);
+        
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(grades);
     }
+
 }

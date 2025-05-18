@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.net.sqlab_backend.domain.exceptions.custom.EntityNotFoundException;
+import br.com.net.sqlab_backend.domain.exercises.models.AnswerProfessor;
 import br.com.net.sqlab_backend.domain.exercises.repositories.AnswerProfessorRepository;
-import br.com.net.sqlab_backend.domain.models.AnswerProfessor;
 
 @Service
 public class AnswerProfessorService {

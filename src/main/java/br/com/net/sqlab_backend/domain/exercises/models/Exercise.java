@@ -5,7 +5,6 @@ import java.util.Set;
 
 import br.com.net.sqlab_backend.domain.exercises.enums.Dialect;
 import br.com.net.sqlab_backend.domain.exercises.enums.ExerciseType;
-import br.com.net.sqlab_backend.domain.models.AnswerProfessor;
 import br.com.net.sqlab_backend.domain.models.ListExercise;
 import br.com.net.sqlab_backend.domain.professor.models.Professor;
 import jakarta.persistence.Column;
@@ -33,6 +32,9 @@ public class Exercise {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+	@Column
+	private String description;
 
     @Enumerated(EnumType.STRING)
     private Dialect dialect;

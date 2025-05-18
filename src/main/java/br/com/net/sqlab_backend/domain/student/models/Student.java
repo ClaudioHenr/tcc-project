@@ -8,16 +8,11 @@ import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import br.com.net.sqlab_backend.domain.grade.models.Grade;
 import br.com.net.sqlab_backend.domain.shared.models.UserEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import br.com.net.sqlab_backend.domain.models.Grade;
-
-//@NoArgsConstructor
-//@AllArgsConstructor
 @Data
 @Table(name = "student")
 @Entity

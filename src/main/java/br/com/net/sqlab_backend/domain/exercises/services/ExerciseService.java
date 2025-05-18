@@ -1,5 +1,6 @@
 package br.com.net.sqlab_backend.domain.exercises.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -23,6 +24,11 @@ public class ExerciseService {
             throw new EntityNotFoundException("Exercício não encontrado...");
         }
         return exercise.get();
+    }
+
+    public List<Exercise> getByListExerciseId(Long id) {
+        List<Exercise> exercises = exerciseRepository.findAllByListExerciseId(id);
+        return exercises;
     }
 
 }

@@ -1,4 +1,4 @@
-package br.com.net.sqlab_backend.authentication.config;
+package br.com.net.sqlab_backend.authentication.config.dev;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,16 +15,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@Profile("prod")
-public class SecurityConfig {
+@Profile({"dev", "test"}) 
+public class DevSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(
-						authorize -> authorize.requestMatchers("/auth/**", "/professors/create", "/students/create")
-								.permitAll().anyRequest().authenticated())
+				.authorizeHttpRequests(authorize -> authorize
+					.anyRequest().permitAll()
+				)
 				.build();
 	}
 

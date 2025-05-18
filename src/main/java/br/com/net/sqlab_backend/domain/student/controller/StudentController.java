@@ -1,10 +1,10 @@
 package br.com.net.sqlab_backend.domain.student.controller;
 
+import br.com.net.sqlab_backend.domain.grade.models.Grade;
 import br.com.net.sqlab_backend.domain.student.models.Student;
 import br.com.net.sqlab_backend.domain.student.services.StudentService;
 import br.com.net.sqlab_backend.domain.student.validation.StudentValidation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,6 @@ public class StudentController {
 
     private final StudentService studentService;
 
-    @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
@@ -40,5 +39,12 @@ public class StudentController {
 
         Student savedStudent = studentService.saveStudent(student);
         return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/grades")
+    public ResponseEntity<?> getGrades(@RequestParam Long id) {
+        List<Grade> grades = studentService.getGrades(id);
+        
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(grades);
     }
 }

@@ -1,23 +1,29 @@
 package br.com.net.sqlab_backend.domain.student.services;
 
 import br.com.net.sqlab_backend.domain.exceptions.custom.EntityNotFoundException;
+import br.com.net.sqlab_backend.domain.grade.models.Grade;
 import br.com.net.sqlab_backend.domain.student.models.Student;
+import br.com.net.sqlab_backend.domain.student.repositories.StudentGradeRepository;
 import br.com.net.sqlab_backend.domain.student.repositories.StudentRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class StudentService {
 
+    private final StudentGradeRepository studentGradeRepository;
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
     
-    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
+    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder, StudentGradeRepository studentGradeRepository) {
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
+        this.studentGradeRepository = studentGradeRepository;
     }
 
     public Student getById(Long id) {
@@ -52,4 +58,10 @@ public class StudentService {
     public boolean studentExistsByRegistrationNumber(String registrationNumber) {
         return studentRepository.existsByRegistrationNumber(registrationNumber);
     }
+
+	public List<Grade> getGrades(Long id) {
+		List<Grade> grades = new ArrayList<>();
+		grades = studentGradeRepository.findGradesByStudentId(id);
+		return grades;
+	}
 }
