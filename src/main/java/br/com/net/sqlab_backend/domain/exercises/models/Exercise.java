@@ -1,11 +1,8 @@
 package br.com.net.sqlab_backend.domain.exercises.models;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import br.com.net.sqlab_backend.domain.exercises.enums.Dialect;
 import br.com.net.sqlab_backend.domain.exercises.enums.ExerciseType;
-import br.com.net.sqlab_backend.domain.models.ListExercise;
+import br.com.net.sqlab_backend.domain.list_exercise.models.ListExercise;
 import br.com.net.sqlab_backend.domain.professor.models.Professor;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +13,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +29,7 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-	@Column
+	@Column(nullable = false)
 	private String description;
 
     @Enumerated(EnumType.STRING)
@@ -51,8 +47,10 @@ public class Exercise {
 	@Column
 	private String tableName;
 
-	@OneToMany
-	private Set<AnswerProfessor> answers = new HashSet<>();
+	// @OneToMany
+	// private Set<AnswerProfessor> answers = new HashSet<>();
+	// @OneToOne(mappedBy = "exercise")
+	// private AnswerProfessor answer;
 
     @JoinColumn(name = "professor_id")
     @ManyToOne
@@ -61,6 +59,18 @@ public class Exercise {
     @JoinColumn(name = "list_id")
     @ManyToOne
     private ListExercise listExercise;
+
+	public Exercise(String description, Dialect dialect, ExerciseType type, Boolean sort, Boolean isPublic,
+			String tableName, Professor professor, ListExercise listExercise) {
+		this.description = description;
+		this.dialect = dialect;
+		this.type = type;
+		this.sort = sort;
+		this.isPublic = isPublic;
+		this.tableName = tableName;
+		this.professor = professor;
+		this.listExercise = listExercise;
+	}
 
 	public Long getId() {
 		return id;

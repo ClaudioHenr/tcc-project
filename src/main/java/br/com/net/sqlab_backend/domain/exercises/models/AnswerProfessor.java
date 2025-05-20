@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +21,7 @@ public class AnswerProfessor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String answer;
 
     @JoinColumn(name = "professor_id")
@@ -28,12 +29,17 @@ public class AnswerProfessor {
     private Professor professor;
 
     @JoinColumn(name = "exercise_id")
-    @ManyToOne
+    @OneToOne
     private Exercise exercise;
 
-    public AnswerProfessor(String answer, Exercise exercise) {
+    public AnswerProfessor(String answer) {
+        this.answer = answer;
+    }
+
+    public AnswerProfessor(String answer, Exercise exercise, Professor professor) {
         this.answer = answer;
         this.exercise = exercise;
+        this.professor = professor;
     }
 
     public Long getId() {

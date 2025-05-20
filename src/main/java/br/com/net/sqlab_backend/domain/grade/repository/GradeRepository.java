@@ -1,13 +1,14 @@
 package br.com.net.sqlab_backend.domain.grade.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import br.com.net.sqlab_backend.domain.grade.models.Grade;
-import br.com.net.sqlab_backend.domain.models.ListExercise;
+import br.com.net.sqlab_backend.domain.list_exercise.models.ListExercise;
 
 public interface GradeRepository extends JpaRepository<Grade, Long> {
 
@@ -16,4 +17,8 @@ public interface GradeRepository extends JpaRepository<Grade, Long> {
 
     @Query("SELECT p.grades FROM Professor p WHERE p.id = :id")
     List<Grade> findGradesByProfessorId(@Param("id") Long id);
+
+    Optional<Grade> findByCod(String cod);
+
+    boolean existsByCod(String cod);
 }

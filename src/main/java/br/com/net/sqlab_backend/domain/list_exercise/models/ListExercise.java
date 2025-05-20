@@ -1,4 +1,4 @@
-package br.com.net.sqlab_backend.domain.models;
+package br.com.net.sqlab_backend.domain.list_exercise.models;
 
 import java.util.HashSet;
 import java.util.Set;

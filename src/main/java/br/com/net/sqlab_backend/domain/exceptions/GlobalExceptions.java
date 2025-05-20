@@ -2,6 +2,7 @@ package br.com.net.sqlab_backend.domain.exceptions;
 
 import java.sql.SQLException;
 
+import org.hibernate.PropertyValueException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,12 @@ public class GlobalExceptions {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(PropertyValueException.class)
+    public ResponseEntity<String> handlerPropertyValueException(PropertyValueException ex) {
+        System.out.println("PropertyValueException: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Propriedade incorreta para persistência");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

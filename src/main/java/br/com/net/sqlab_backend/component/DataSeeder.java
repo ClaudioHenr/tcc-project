@@ -13,9 +13,8 @@ import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.repositories.AnswerProfessorRepository;
 import br.com.net.sqlab_backend.domain.exercises.repositories.ExerciseRepository;
 import br.com.net.sqlab_backend.domain.grade.repository.GradeRepository;
-import br.com.net.sqlab_backend.domain.models.ListExercise;
+import br.com.net.sqlab_backend.domain.list_exercise.repositories.ListExerciseRepository;
 import br.com.net.sqlab_backend.domain.professor.models.Professor;
-import br.com.net.sqlab_backend.domain.repositories.ListExerciseRepository;
 import br.com.net.sqlab_backend.domain.student.models.Student;
 import br.com.net.sqlab_backend.domain.student.repositories.StudentRepository;
 
@@ -29,6 +28,8 @@ public class DataSeeder implements CommandLineRunner {
     private final GradeRepository gradeRepository;
     private final ListExerciseRepository listExerciseRepository;
     
+    
+
     public DataSeeder(ExerciseRepository exerciseRepository, AnswerProfessorRepository answerRepository,
             StudentRepository studentRepository, GradeRepository gradeRepository,
             ListExerciseRepository listExerciseRepository) {

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.net.sqlab_backend.domain.exercises.dto.QueryExerciseDTO;
+import br.com.net.sqlab_backend.domain.exercises.dto.RequestCreateExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.ResponseExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.services.ExerciseService;
@@ -15,6 +16,8 @@ import br.com.net.sqlab_backend.domain.exercises.services.SolveExerciseService;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,9 +44,27 @@ public class ExercisesController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?>getMethodName(@PathVariable Long id) {
+    public ResponseEntity<?>getExercise(@PathVariable Long id) {
         Exercise exercise = exerciseService.getById(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(exercise);
+        return ResponseEntity.status(HttpStatus.FOUND).body(exercise);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createExercise(@RequestBody RequestCreateExerciseDTO request) {
+        Exercise exerciseCreated = exerciseService.save(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(exerciseCreated);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateExercise(@PathVariable Long id, @RequestBody Exercise update) {
+        Exercise exercise = exerciseService.update(id, update);
+        return ResponseEntity.status(HttpStatus.OK).body(exercise);
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteExercise(@PathVariable Long id) {
+        exerciseService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Exercício excluidO com sucesso");
     }
     
     @GetMapping("/list")

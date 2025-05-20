@@ -3,7 +3,8 @@ package br.com.net.sqlab_backend.domain.grade.models;
 import java.util.HashSet;
 import java.util.Set;
 
-import br.com.net.sqlab_backend.domain.models.ListExercise;
+import br.com.net.sqlab_backend.domain.list_exercise.models.ListExercise;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,9 +33,14 @@ public class Grade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String name;
 
+    @Column
     private String subject;
+
+    @Column(unique = true)
+    private String cod;
 
     @ManyToMany
     @JoinTable(
