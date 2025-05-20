@@ -33,7 +33,7 @@ public class ListExerciseController {
     @GetMapping("/{id}")
     public ResponseEntity<?>getListExercise(@PathVariable Long id) {
         ListExercise exercise = listExerciseService.getById(id);
-        return ResponseEntity.status(HttpStatus.FOUND).body(exercise);
+        return ResponseEntity.status(HttpStatus.OK).body(exercise);
     }
 
     @PutMapping("/{id}")

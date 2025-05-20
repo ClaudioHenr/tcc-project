@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.net.sqlab_backend.domain.exceptions.custom.EntityNotFoundException;
-import br.com.net.sqlab_backend.domain.exercises.dto.RequestCreateExerciseDTO;
+import br.com.net.sqlab_backend.domain.exercises.dto.exercise.RequestCreateExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.models.AnswerProfessor;
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.repositories.ExerciseRepository;

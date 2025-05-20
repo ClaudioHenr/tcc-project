@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.net.sqlab_backend.domain.exercises.dto.QueryExerciseDTO;
-import br.com.net.sqlab_backend.domain.exercises.dto.RequestCreateExerciseDTO;
-import br.com.net.sqlab_backend.domain.exercises.dto.ResponseExerciseDTO;
+import br.com.net.sqlab_backend.domain.exercises.dto.exercise.RequestCreateExerciseDTO;
+import br.com.net.sqlab_backend.domain.exercises.dto.exercise.ResponseGetExerciseDTO;
+import br.com.net.sqlab_backend.domain.exercises.dto.exercise.ResponseSolveExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.services.ExerciseService;
 import br.com.net.sqlab_backend.domain.exercises.services.SolveExerciseService;
@@ -37,16 +38,17 @@ public class ExercisesController {
     }
 
     @PostMapping("/solve")
-    public ResponseEntity<ResponseExerciseDTO> solveExercise(@RequestBody QueryExerciseDTO queryDTO) {
+    public ResponseEntity<ResponseSolveExerciseDTO> solveExercise(@RequestBody QueryExerciseDTO queryDTO) {
         System.out.println("Chegou até solveExercise");
-        ResponseExerciseDTO result = solveExerciseService.handleSolveExercise(queryDTO);
+        ResponseSolveExerciseDTO result = solveExerciseService.handleSolveExercise(queryDTO);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?>getExercise(@PathVariable Long id) {
         Exercise exercise = exerciseService.getById(id);
-        return ResponseEntity.status(HttpStatus.FOUND).body(exercise);
+        ResponseGetExerciseDTO dto = new ResponseGetExerciseDTO(id, exercise.getDescription(), exercise.getDialect(), exercise.getType(), exercise.getTableName());
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @PostMapping("/create")

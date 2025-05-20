@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.net.sqlab_backend.domain.exercises.dto.AnswerStudentCreateDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.QueryExerciseDTO;
-import br.com.net.sqlab_backend.domain.exercises.dto.ResponseExerciseDTO;
+import br.com.net.sqlab_backend.domain.exercises.dto.exercise.ResponseSolveExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.models.AnswerProfessor;
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.models.QueryResult;
@@ -36,8 +36,8 @@ public class SolveExerciseService {
         this.answerProfessorService = answerProfessorService;
     }
 
-    public ResponseExerciseDTO handleSolveExercise(QueryExerciseDTO query) {
-        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
+    public ResponseSolveExerciseDTO handleSolveExercise(QueryExerciseDTO query) {
+        ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(false, null, 0);
         // Salvar query em answer_student
         AnswerStudentCreateDTO dto = new AnswerStudentCreateDTO(query.query(), null, query.exerciseId(), query.studentId());
         answerStudentService.save(dto);
@@ -71,7 +71,7 @@ public class SolveExerciseService {
         }
     }
 
-    public ResponseExerciseDTO solveCreateExercise(QueryExerciseDTO query, String queryAnswer, String tableName) {
+    public ResponseSolveExerciseDTO solveCreateExercise(QueryExerciseDTO query, String queryAnswer, String tableName) {
         String querySelect = "SELECT * FROM " + tableName;
         // Criar 'ambientes'
         Connection conn = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
@@ -96,7 +96,7 @@ public class SolveExerciseService {
             
             List<Map<String, Object>> tableAfterUpdateStudentList = CompareAnswerService.resultSetToList(tableCreatedStudent.resultSet);
             // Formar DTO de retorno
-            ResponseExerciseDTO res = new ResponseExerciseDTO(isEqual, tableAfterUpdateStudentList, updateCount);
+            ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(isEqual, tableAfterUpdateStudentList, updateCount);
 
             // Fechar ResultSet e Statement após uso
             resultQueryStudent.close();
@@ -111,11 +111,11 @@ public class SolveExerciseService {
             environmentExerciseService.closeConnection(conn);
         }
         // Retornar
-        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
+        ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(false, null, 0);
         return res;
     }
 
-    public ResponseExerciseDTO solveDropExercise(QueryExerciseDTO query, String queryAnswer, String tableName) {
+    public ResponseSolveExerciseDTO solveDropExercise(QueryExerciseDTO query, String queryAnswer, String tableName) {
         boolean isCorrect;
         Connection conn = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
         Connection connAnswer = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
@@ -140,7 +140,7 @@ public class SolveExerciseService {
             resultQueryStudent.close();
             resultQueryAnswer.close();
             // Retornar
-            ResponseExerciseDTO res = new ResponseExerciseDTO(isCorrect, null, 0);
+            ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(isCorrect, null, 0);
             return res;
         } catch (Exception e) {
             System.err.println("Erro ao executar queries: " + e.getMessage());
@@ -151,11 +151,11 @@ public class SolveExerciseService {
 
         // Conferir se tabela continua a existir
 
-        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
+        ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(false, null, 0);
         return res;
     }
 
-    public ResponseExerciseDTO solveUpdateExercise(QueryExerciseDTO query, String queryAnswer, String tableName) {
+    public ResponseSolveExerciseDTO solveUpdateExercise(QueryExerciseDTO query, String queryAnswer, String tableName) {
         String querySelect = "SELECT * FROM " + tableName;
         // Criar 'ambientes'
         Connection conn = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
@@ -175,7 +175,7 @@ public class SolveExerciseService {
             boolean isEqual = CompareAnswerService.compareLists(tableAfterUpdateStudentList, tableAfterUpdateAnswerList);
 
             // Formar DTO de retorno
-            ResponseExerciseDTO res = new ResponseExerciseDTO(isEqual, tableAfterUpdateStudentList, updateCount);
+            ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(isEqual, tableAfterUpdateStudentList, updateCount);
 
             // Fechar ResultSet e Statement após uso
             resultQueryStudent.close();
@@ -191,11 +191,11 @@ public class SolveExerciseService {
             environmentExerciseService.closeConnection(conn);
         }
         // Retornar
-        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
+        ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(false, null, 0);
         return res;
     }
 
-    public ResponseExerciseDTO solveSelectExercise(QueryExerciseDTO query, String queryAnswer) {
+    public ResponseSolveExerciseDTO solveSelectExercise(QueryExerciseDTO query, String queryAnswer) {
         // Criar 'ambiente'
         Connection conn = environmentExerciseService.createEnviromentForExercise(query.exerciseId());
 
@@ -211,7 +211,7 @@ public class SolveExerciseService {
             // answerStudentSaved.setCorrect(isIqual);
             // answerStudentService.update(answerStudentSaved);
             // Formar DTO de retorno
-            ResponseExerciseDTO res = new ResponseExerciseDTO(isEqual, studentList, 0);
+            ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(isEqual, studentList, 0);
             // Fechar ResultSet e Statement após uso
             resultQueryStudent.close();
             resultQueryAnswer.close();
@@ -225,7 +225,7 @@ public class SolveExerciseService {
         }
 
         // Retornar
-        ResponseExerciseDTO res = new ResponseExerciseDTO(false, null, 0);
+        ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(false, null, 0);
         return res;
     }
 

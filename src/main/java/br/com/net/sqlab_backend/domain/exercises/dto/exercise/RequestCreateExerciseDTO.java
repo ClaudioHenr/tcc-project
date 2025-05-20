@@ -1,4 +1,4 @@
-package br.com.net.sqlab_backend.domain.exercises.dto;
+package br.com.net.sqlab_backend.domain.exercises.dto.exercise;
 
 import br.com.net.sqlab_backend.domain.exercises.enums.Dialect;
 import br.com.net.sqlab_backend.domain.exercises.enums.ExerciseType;

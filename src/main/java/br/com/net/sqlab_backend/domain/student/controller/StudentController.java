@@ -45,6 +45,6 @@ public class StudentController {
     public ResponseEntity<?> getGrades(@RequestParam Long id) {
         List<Grade> grades = studentService.getGrades(id);
         
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(grades);
+        return ResponseEntity.status(HttpStatus.OK).body(grades);
     }
 }
