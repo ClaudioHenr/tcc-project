@@ -1,5 +1,6 @@
 package br.com.net.sqlab_backend.domain.exercises.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -66,13 +67,17 @@ public class ExercisesController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteExercise(@PathVariable Long id) {
         exerciseService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Exercício excluidO com sucesso");
+        return ResponseEntity.status(HttpStatus.OK).body("Exercício excluido com sucesso");
     }
     
     @GetMapping("/list")
     public ResponseEntity<?> getAllExercisesByListExerciseId(@RequestParam Long id) {
         List<Exercise> exercises = exerciseService.getByListExerciseId(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(exercises);
+        List<ResponseGetExerciseDTO> exercisesDTO = new ArrayList<>();
+        for (Exercise exercise : exercises) {
+            exercisesDTO.add(new ResponseGetExerciseDTO(exercise.getId(), exercise.getDescription(), exercise.getDialect(), exercise.getType(), exercise.getTableName()));
+        }
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(exercisesDTO);
     }
     
 
