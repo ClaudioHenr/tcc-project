@@ -69,8 +69,14 @@ public class ExerciseService {
         if (entity.isEmpty()) {
             throw new EntityNotFoundException("Exercício não encontrado");
         }
+        
         Exercise exercise = entity.get();
         exercise.setDescription(update.getDescription());
+        exercise.setDialect(update.getDialect());
+        exercise.setType(update.getType());
+        exercise.setSort(update.getSort());
+        exercise.setIsPublic(update.getIsPublic());
+        exercise.setTableName(update.getTableName());
 
         Exercise exerciseUptaded = exerciseRepository.save(exercise);
         return exerciseUptaded;
