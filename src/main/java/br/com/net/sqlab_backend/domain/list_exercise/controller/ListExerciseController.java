@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.net.sqlab_backend.domain.list_exercise.dto.ResponseCreateListExerciseDTO;
+import br.com.net.sqlab_backend.domain.list_exercise.dto.ResponseGetListExerciseDTO;
+import br.com.net.sqlab_backend.domain.list_exercise.dto.ResponseUpdateListExerciseDTO;
 import br.com.net.sqlab_backend.domain.list_exercise.models.ListExercise;
 import br.com.net.sqlab_backend.domain.list_exercise.services.ListExerciseService;
 
@@ -27,19 +30,22 @@ public class ListExerciseController {
     @PostMapping("/create")
     public ResponseEntity<?> createListExercise(@RequestBody ListExercise request) {
         ListExercise entityCreated = listExerciseService.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(entityCreated);
+        ResponseCreateListExerciseDTO dto = new ResponseCreateListExerciseDTO(entityCreated.getId(), entityCreated.getTitle(), entityCreated.getDescription());
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?>getListExercise(@PathVariable Long id) {
-        ListExercise exercise = listExerciseService.getById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(exercise);
+    public ResponseEntity<?> getListExercise(@PathVariable Long id) {
+        ListExercise entity = listExerciseService.getById(id);
+        ResponseGetListExerciseDTO dto = new ResponseGetListExerciseDTO(entity.getId(), entity.getTitle(), entity.getDescription());
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateListExercise(@PathVariable Long id, @RequestBody ListExercise update) {
-        ListExercise exercise = listExerciseService.update(id, update);
-        return ResponseEntity.status(HttpStatus.OK).body(exercise);
+        ListExercise entity = listExerciseService.update(id, update);
+        ResponseUpdateListExerciseDTO dto = new ResponseUpdateListExerciseDTO(entity.getId(), entity.getTitle(), entity.getDescription());
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @DeleteMapping("/{id}")
