@@ -1,5 +1,6 @@
 package br.com.net.sqlab_backend.domain.professor.controller;
 
+import br.com.net.sqlab_backend.domain.grade.dto.ResponseGetGradeDTO;
 import br.com.net.sqlab_backend.domain.grade.models.Grade;
 import br.com.net.sqlab_backend.domain.professor.models.Professor;
 import br.com.net.sqlab_backend.domain.professor.services.ProfessorService;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,8 +47,11 @@ public class ProfessorController {
     @GetMapping("/grades")
     public ResponseEntity<?> getGrades(@RequestParam Long id) {
         List<Grade> grades = professorService.getGrades(id);
-        
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(grades);
+        List<ResponseGetGradeDTO> dtos = new ArrayList<>();
+        for (Grade grade : grades) {
+            dtos.add(new ResponseGetGradeDTO(grade.getId(), grade.getName(), grade.getSubject(), grade.getCod()));
+        }
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(dtos);
     }
 
 }
