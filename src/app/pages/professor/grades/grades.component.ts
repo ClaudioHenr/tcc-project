@@ -35,4 +35,8 @@ export class GradesComponent {
       console.log('Visualizando alunos da turma com ID:', gradeId);
       this.router.navigate(['/grade-students', gradeId]);
     }
+
+    goToGradeRegister() {
+    this.router.navigate(['/professor/grade-register']);
+    }
 }

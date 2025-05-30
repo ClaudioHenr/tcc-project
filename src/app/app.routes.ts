@@ -15,11 +15,13 @@ import { RegisterComponent } from './register/register.component';
 import { ExerciseComponent } from './pages/professor/exercise/exercise.component';
 import { ExerciseListComponent } from './pages/professor/exercise-list/exercise-list.component';
 import { GradesComponent } from './pages/professor/grades/grades.component';
+import { GradeRegisterComponent } from './pages/professor/grade-register/grade-register.component';
 import { ListsComponent } from './pages/professor/lists/lists.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { AppRoles } from './core/constants/roles.const.enum';
 import { StudentGradeComponent } from './pages/student/student-grade/student-grade.component';
 import { StudentCatalogExercisesComponent } from './pages/student/student-catalog-exercises/student-catalog-exercises.component';
+import { ListRegisterComponent } from './pages/professor/list-register/list-register.component';
 
 export const routes: Routes = [
   {
@@ -44,7 +46,9 @@ export const routes: Routes = [
       { path: 'exercise', component: ExerciseComponent },
       { path: 'exercise-list', component: ExerciseListComponent },
       { path: 'grades', component: GradesComponent },
-      { path: 'lists', component: ListsComponent }
+      { path: 'grade-register', component: GradeRegisterComponent },
+      { path: 'lists', component: ListsComponent },
+      { path: 'list-register', component: ListRegisterComponent }
     ]
   },
   {

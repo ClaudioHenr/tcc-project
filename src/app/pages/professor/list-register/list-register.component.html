@@ -1,0 +1,96 @@
+<div class="p-6 sm:ml-64 mt-14 mx-auto">
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+  <h1 class="text-2xl font-bold mb-6">
+    {{ isEditMode ? 'Editar Lista de Exercícios' : 'Cadastrar Lista de Exercícios' }}
+  </h1>
+
+  <!-- Nome -->
+  <div class="mb-4">
+    <label class="block mb-1 font-medium">Nome da Lista</label>
+    <input
+      type="text"
+      [(ngModel)]="list.name"
+      class="w-full border border-gray-300 rounded px-3 py-2"
+      placeholder="Digite o nome da lista"
+    />
+  </div>
+
+  <!-- Descrição -->
+  <div class="mb-4">
+    <label class="block mb-1 font-medium">Descrição</label>
+    <textarea
+      [(ngModel)]="list.description"
+      class="w-full border border-gray-300 rounded px-3 py-2"
+      placeholder="Descreva a lista"
+    ></textarea>
+  </div>
+
+  <!-- Data de entrega -->
+  <div class="mb-4">
+    <label class="block mb-1 font-medium">Data Limite</label>
+    <input
+      type="date"
+      [(ngModel)]="list.dueDate"
+      class="w-full border border-gray-300 rounded px-3 py-2"
+    />
+  </div>
+
+  <!-- Seleção de Turmas -->
+  <div class="mb-4">
+    <label class="block mb-1 font-medium">Selecione as Turmas</label>
+    <div class="space-y-2">
+      <div *ngFor="let grade of grades">
+        <label class="flex items-center">
+          <input
+            type="checkbox"
+            [value]="grade.id"
+            [(ngModel)]="list.gradeIds"
+            [ngModelOptions]="{ standalone: true }"
+            (change)="onCheckboxChange(grade.id, 'grade')"
+            [checked]="list.gradeIds.includes(grade.id)"
+            class="mr-2"
+          />
+          {{ grade.name }}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seleção de Exercícios -->
+  <div class="mb-6">
+    <label class="block mb-1 font-medium">Selecione os Exercícios</label>
+    <div class="space-y-2">
+      <div *ngFor="let ex of exercises">
+        <label class="flex items-center">
+          <input
+            type="checkbox"
+            [value]="ex.id"
+            [(ngModel)]="list.exerciseIds"
+            [ngModelOptions]="{ standalone: true }"
+            (change)="onCheckboxChange(ex.id, 'exercise')"
+            [checked]="list.exerciseIds.includes(ex.id)"
+            class="mr-2"
+          />
+          {{ ex.description }}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botões -->
+  <div class="flex justify-end space-x-4">
+    <button
+      (click)="cancel()"
+      class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+    >
+      Cancelar
+    </button>
+    <button
+      (click)="save()"
+      class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+    >
+      {{ isEditMode ? 'Atualizar' : 'Cadastrar' }}
+    </button>
+  </div>
+</div>
+</div>
