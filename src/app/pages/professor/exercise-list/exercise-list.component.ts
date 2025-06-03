@@ -12,8 +12,8 @@ import { exercise } from '../../../models/exercise';
 })
 export class ExerciseListComponent {
   exercicios: exercise[] = [
-    { id: 1, description: 'Listar todos os alunos', image: '', sort: false, public: true, id_professor: 1, id_list: 1, dialect: '', type_exercise: 'SELECT' },
-    { id: 2, description: 'Inserir novo curso', image: '', sort: false, public: false, id_professor: 1, id_list: 1, dialect: '', type_exercise: 'INSERT' }
+    { id: 1, title:'Tralarelo', description: 'Listar todos os alunos', image: '', sort: false, public: true, id_professor: 1, id_list: 1, dialect: '', type_exercise: 'SELECT', reference_table: 'students' },
+    { id: 2, title:'Tralala', description: 'Inserir novo curso', image: '', sort: false, public: false, id_professor: 1, id_list: 1, dialect: '', type_exercise: 'INSERT', reference_table: 'curses' }
   ];
 
   adicionarExercicio() {

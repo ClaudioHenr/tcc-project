@@ -22,6 +22,8 @@ import { AppRoles } from './core/constants/roles.const.enum';
 import { StudentGradeComponent } from './pages/student/student-grade/student-grade.component';
 import { StudentCatalogExercisesComponent } from './pages/student/student-catalog-exercises/student-catalog-exercises.component';
 import { ListRegisterComponent } from './pages/professor/list-register/list-register.component';
+import { GradeStudentsComponent } from './pages/professor/grade-students/grade-students.component';
+import { StudentAnswersComponent } from './pages/professor/student-answers/student-answers.component';
 
 export const routes: Routes = [
   {
@@ -48,7 +50,9 @@ export const routes: Routes = [
       { path: 'grades', component: GradesComponent },
       { path: 'grade-register', component: GradeRegisterComponent },
       { path: 'lists', component: ListsComponent },
-      { path: 'list-register', component: ListRegisterComponent }
+      { path: 'list-register', component: ListRegisterComponent },
+      { path: 'grade-students', component: GradeStudentsComponent },
+      { path: 'student-answers', component: StudentAnswersComponent }
     ]
   },
   {
