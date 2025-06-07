@@ -1,15 +1,14 @@
 <div class="p-6 sm:ml-64 mt-14 mx-auto">
-  <form 
+  <form class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md space-y-6"
     #form="ngForm" 
-    (ngSubmit)="salvarExercicio()" 
+    (ngSubmit)="save(form)" 
     novalidate 
-    class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md space-y-6"
   >
     <h2 class="text-2xl font-bold text-gray-800">
       {{ isEditing ? 'Editar Exercício' : 'Cadastrar Exercício' }}
     </h2>
 
-    <!-- 🔸 Título -->
+    <!-- Título -->
     <div>
       <label for="titulo" class="block mb-2 text-sm font-medium text-gray-700">
         Título do Exercício
@@ -28,43 +27,63 @@
       </p>
     </div>
 
+    <div>
+      <label for="dialect" class="block mb-2 text-sm font-medium text-gray-700">
+        Dialeto do banco
+      </label>
+      <select
+        id="tipo"
+        name="dialect"
+        required
+        [(ngModel)]="exercise.dialect"
+        class="block w-full p-2 border border-gray-300 rounded-lg"
+      >
+        <option value="" disabled selected>Selecione um tipo de dialeto</option>
+        <option *ngFor="let type of dialectTypes" [value]="type">{{ type }}</option>
+      </select>
+      <p *ngIf="form.submitted && !exercise.type" class="text-red-500 text-sm">
+        Este campo é obrigatório.
+      </p>
+    </div>
+
     <!-- Tipo do exercício -->
     <div>
-      <label for="tipo" class="block mb-2 text-sm font-medium text-gray-700">
+      <label for="type" class="block mb-2 text-sm font-medium text-gray-700">
         Tipo de comando SQL
       </label>
       <select
         id="tipo"
-        name="type_exercise"
+        name="type"
         required
-        [(ngModel)]="exercise.type_exercise"
+        [(ngModel)]="exercise.type"
         class="block w-full p-2 border border-gray-300 rounded-lg"
       >
         <option value="" disabled selected>Selecione um tipo</option>
         <option *ngFor="let tipo of tiposSQL" [value]="tipo">{{ tipo }}</option>
       </select>
-      <p *ngIf="form.submitted && !exercise.type_exercise" class="text-red-500 text-sm">
+      <p *ngIf="form.submitted && !exercise.dialect" class="text-red-500 text-sm">
         Este campo é obrigatório.
       </p>
     </div>
 
     <div>
-    <label for="tabela" class="block mb-2 text-sm font-medium text-gray-700">
-      Tabela Referente
-    </label>
-    <input
-      type="text"
-      id="tabela"
-      name="reference_table"
-      [(ngModel)]="exercise.reference_table"
-      required
-      class="block w-full p-2 border border-gray-300 rounded-lg"
-      placeholder="Digite o nome da tabela"
-    >
-    <p *ngIf="form.submitted && !exercise.reference_table.trim()" class="text-red-500 text-sm">
-      Este campo é obrigatório.
-    </p>
-  </div>
+      <label for="tableName" class="block mb-2 text-sm font-medium text-gray-700">
+        Tabela Referente
+      </label>
+      <select
+        id="tipo"
+        name="tableName"
+        required
+        [(ngModel)]="exercise.tableName"
+        class="block w-full p-2 border border-gray-300 rounded-lg"
+      >
+        <option value="" disabled selected>Selecione uma tabela</option>
+        <option *ngFor="let table of tableNames" [value]="table">{{ table }}</option>
+      </select>
+      <p *ngIf="form.submitted && !exercise.tableName" class="text-red-500 text-sm">
+        Este campo é obrigatório.
+      </p>
+    </div>
 
     <!-- Descrição -->
     <div>
@@ -86,10 +105,10 @@
 
     <!-- Checkboxes -->
     <div class="flex flex-col gap-2">
-      <label class="flex items-center space-x-2">
+      <!-- <label class="flex items-center space-x-2">
         <input type="checkbox" [(ngModel)]="exercise.sort" name="sort" class="rounded">
         <span class="text-sm text-gray-700">ORDER BY será relevante</span>
-      </label>
+      </label> -->
       <label class="flex items-center space-x-2">
         <input type="checkbox" [(ngModel)]="exercise.public" name="public" class="rounded">
         <span class="text-sm text-gray-700">Exercício será público</span>
@@ -97,7 +116,7 @@
     </div>
 
     <!-- Upload de imagem -->
-    <div>
+    <!-- <div>
       <label for="imagem" class="block mb-2 text-sm font-medium text-gray-700">
         Imagem (opcional)
       </label>
@@ -109,7 +128,7 @@
       <div *ngIf="exercise.image" class="mt-2 text-sm text-gray-600">
         Imagem selecionada: <strong>{{ exercise.image }}</strong>
       </div>
-    </div>
+    </div> -->
 
     <!-- 🔸 Resposta correta -->
     <div>
@@ -120,22 +139,28 @@
         type="text"
         id="resposta"
         name="answer"
-        [(ngModel)]="answer.answer"
+        [(ngModel)]="exercise.answerProfessor"
         required
         class="block w-full p-2 border rounded-lg"
         placeholder="Digite a resposta correta (SQL)"
       >
-      <p *ngIf="form.submitted && !answer.answer.trim()" class="text-red-500 text-sm">
+      <p *ngIf="form.submitted && !exercise.answerProfessor" class="text-red-500 text-sm">
         Este campo é obrigatório.
       </p>
     </div>
 
-    <!-- Botão de salvar -->
-    <button 
-      type="submit" 
-      class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
-    >
-      {{ isEditing ? 'Salvar Alterações' : 'Salvar Exercício' }}
-    </button>
+    <div class="flex items-center justify-end gap-4">
+      <button class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+        type="button"
+        (click)="back()"
+      >
+        Voltar
+      </button>
+      <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        type="submit" 
+      >
+        {{ isEditing ? 'Salvar Alterações' : 'Salvar Exercício' }}
+      </button>
+    </div>
   </form>
 </div>

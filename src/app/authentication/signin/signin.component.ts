@@ -49,7 +49,8 @@ export class SigninComponent {
         const userRole = this.tokenService.getUserRole();
 
         if (userRole === AppRoles.PROFESSOR) {
-          this.router.navigate(['/professor/home']);
+          // this.router.navigate(['/professor/home']);
+          this.router.navigate(['/professor/grades']);
         } else if (userRole === AppRoles.STUDENT) {
           this.router.navigate(['/student/home']);
         } else {

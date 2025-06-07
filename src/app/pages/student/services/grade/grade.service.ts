@@ -10,6 +10,7 @@ import { AppRoles } from '../../../../core/constants/roles.const.enum';
 })
 export class GradeService {
   api: String = environment.apiUrl;
+  userId = this.tokenService.getUserId();
 
   constructor(
     private http: HttpClient,
@@ -17,10 +18,9 @@ export class GradeService {
   ) { }
 
   getGrades() {
-    const idUser: string = '1';
     const role: AppRoles | null = this.tokenService.getUserRole();
     return this.http.get(`${this.api}/students/grades`, {
-      params: { "id": idUser }
+      params: { "id": this.userId }
     }).pipe(
       tap(),
       catchError((err: HttpErrorResponse) => {

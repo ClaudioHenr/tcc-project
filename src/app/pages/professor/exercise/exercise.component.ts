@@ -1,8 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { exercise } from '../../../models/exercise';
-import { answer } from '../../../models/answer';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule, Location } from '@angular/common';
+import { ExerciseService } from '../services/exercise/exercise.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TokenService } from '../../../core/services/token.service';
+
+interface createExercise {
+  title: string,
+  description: string,
+  dialect: string,
+  type: string,
+  sort: boolean,
+  // image: string,  // Não tem no back
+  public: boolean,
+  tableName: string
+  listId: string,
+  professorId: string,
+  answerProfessor: string
+}
 
 @Component({
   selector: 'app-exercise',
@@ -13,80 +28,72 @@ import { answer } from '../../../models/answer';
 })
 export class ExerciseComponent implements OnInit {
   tiposSQL: string[] = ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'DROP', 'ALTER'];
+  dialectTypes: string[] = ['POSTGRESQL', 'MYSQL'];
+  tableNames: string[] = ['users', 'orders'];
 
   isEditing: boolean = false;
 
-  exercise: exercise = {
-    id: 0,
+  exercise: createExercise = {
     title: '',
     description: '',
-    image: '',
-    sort: false,
-    public: false,
-    id_professor: 1,
-    id_list: 0,
     dialect: '',
-    type_exercise: '',
-    reference_table: ''
+    type: '',
+    sort: false,
+    // image: '',  // Não tem no back
+    public: false,
+    tableName: '',
+    listId: '',
+    professorId: '',
+    answerProfessor: ''
   };
 
-  answer: answer = {
-    id: 0,
-    answer: '',
-    id_exercise: this.exercise.id,
-    id_professor: this.exercise.id_professor
-  };
+  constructor(
+    private exerciseService: ExerciseService,
+    private tokenService: TokenService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
-    // 🔧 Simulação de edição (se necessário, descomente)
-    /*
-    this.isEditing = true;
-    this.exercise = {
-      id: 5,
-      title: 'Exercício de exemplo',
-      description: 'Descrição de exemplo',
-      image: 'imagem.png',
-      sort: true,
-      public: false,
-      id_professor: 1,
-      id_list: 2,
-      dialect: '',
-      type_exercise: 'SELECT'
-    };
-    this.answer = {
-      id: 1,
-      answer: 'SELECT * FROM alunos',
-      id_exercise: 5,
-      id_professor: 1
-    };
-    */
-  }
-
-  onImageUpload(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.exercise.image = file.name;
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.exercise.listId = id;
+      this.exercise.professorId = this.tokenService.getUserId();
     }
   }
 
-  salvarExercicio() {
+  // onImageUpload(event: any) {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     this.exercise.image = file.name;
+  //   }
+  // }
+
+  save(form: NgForm) {
     if (
-      !this.exercise.type_exercise ||
+      !this.exercise.type ||
       !this.exercise.title.trim() ||
       !this.exercise.description.trim() ||
-      !this.answer.answer.trim()
+      !this.exercise.answerProfessor.trim()
     ) {
       console.warn('Formulário inválido.');
       return;
     }
-
-    if (this.isEditing) {
-      console.log('Exercício editado:', this.exercise);
-    } else {
-      console.log('Exercício criado:', this.exercise);
-    }
-    console.log('Resposta correta:', this.answer);
-
-    // chamada ao backend futuramente
+    console.log(this.exercise);
+    this.exerciseService.create(this.exercise).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        alert("Exercício cadastrado com sucesso");
+        form.reset();
+      }, error: (err: any) => {
+        console.log(err);
+      }
+    })
   }
+
+  back() {
+    this.location.back();
+  }
+
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GradeService } from '../services/grade/grade.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-grade-register',
@@ -15,7 +16,8 @@ export class GradeRegisterComponent {
 
   constructor(
     private router: Router,
-    private gradeService: GradeService
+    private gradeService: GradeService, 
+    private location: Location
   ) {};
 
   grade = {
@@ -40,5 +42,9 @@ export class GradeRegisterComponent {
 
   goToGradeRegister() {
     this.router.navigate(['/professor/grade-register']);
+  }
+
+  cancel() {
+    this.location.back();
   }
 }

@@ -1,39 +1,69 @@
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ListexerciseService } from '../services/lists/listexercise.service';
 
 @Component({
   selector: 'app-lists',
+  standalone: true,
+  imports: [
+    FormsModule,
+    CommonModule
+  ],
   templateUrl: './lists.component.html',
   styleUrls: ['./lists.component.css']
 })
 export class ListsComponent implements OnInit {
-  // Simulando listas de exemplo
-  lists = [
-    { id: 1, name: 'Lista 1', active: true },
-    { id: 2, name: 'Lista 2', active: false },
-    { id: 3, name: 'Lista 3', active: true },
-  ];
+  gradeId!: string;
 
-  constructor() {}
+  lists: any = [];
+
+  constructor(
+    private listExerciseService: ListexerciseService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
-    // Aqui você pode buscar as listas da API, por exemplo
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.gradeId = id;
+      this.getListExercises(this.gradeId);
+    }
+  }
+
+  getListExercises(gradeId: string) {
+    this.listExerciseService.getListExercises(gradeId).subscribe({
+      next: (data: any) => {
+        this.lists = data;
+      }, error: (err: any) => {
+        console.log(err);
+      }
+    })
+  }
+
+  addExercise(listId: string): void {
+    this.router.navigate(['/professor/exercise', listId])
+  }
+
+  viewExercises(listId: string): void {
+    this.router.navigate(['/professor/exercise-list', listId])
   }
 
   addList(): void {
-    // Lógica para adicionar uma nova lista
-    console.log('Adicionar nova lista');
+    this.router.navigate(['/professor/list-register', this.gradeId], { queryParams: {isEdit: false} });
   }
 
   editList(listId: number): void {
+    this.router.navigate(['/professor/list-register', listId], { queryParams: {isEdit: true} });
     // Lógica para editar a lista com o ID específico
     console.log('Editar lista', listId);
   }
 
-  toggleListStatus(listId: number): void {
-    // Aqui alternamos o status da lista entre ativo e inativo
-    const list = this.lists.find(l => l.id === listId);
-    if (list) {
-      list.active = !list.active;
-    }
+
+  back(): void {
+    this.location.back();
   }
 }

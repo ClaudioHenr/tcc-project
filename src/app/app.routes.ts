@@ -45,12 +45,12 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: ProfessorHomeComponent },
-      { path: 'exercise', component: ExerciseComponent },
-      { path: 'exercise-list', component: ExerciseListComponent },
+      { path: 'exercise/:id', component: ExerciseComponent },
+      { path: 'exercise-list/:id', component: ExerciseListComponent },
       { path: 'grades', component: GradesComponent },
       { path: 'grade-register', component: GradeRegisterComponent },
-      { path: 'lists', component: ListsComponent },
-      { path: 'list-register', component: ListRegisterComponent },
+      { path: 'lists/:id', component: ListsComponent },
+      { path: 'list-register/:id', component: ListRegisterComponent },
       { path: 'grade-students', component: GradeStudentsComponent },
       { path: 'student-answers', component: StudentAnswersComponent }
     ]

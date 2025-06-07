@@ -1,8 +1,7 @@
 export interface list {
     id: number;
-    name: string;
+    title: string;
     description: string;
-    gradeIds: number[];
     exerciseIds: number[];
     dueDate?: Date;
  }

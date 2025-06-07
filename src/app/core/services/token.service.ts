@@ -7,6 +7,7 @@ import { AppRoles } from '../constants/roles.const.enum';
 })
 export class TokenService {
   private readonly TOKEN_KEY = 'auth_token';
+  private readonly USER_ID_KEY = 'user_id';
 
   constructor() { }
 
@@ -61,9 +62,18 @@ export class TokenService {
     return role ? role as AppRoles : null;
   }
 
-  getUserId(): number | null {
+  getUserId(): string {
     const decoded = this.decodeToken();
-    const id = decoded?.id;
-    return typeof id === 'number' ? id : null;
+    const id = decoded?.userId;
+    console.log("ID DO USUÁRIO: " + id);
+    return id ? id : '0';
+  }
+
+  saveUserId(userId: string, rememberMe: boolean = false): void {
+    if (rememberMe) {
+      localStorage.setItem(this.USER_ID_KEY, userId);
+    } else {
+      sessionStorage.setItem(this.USER_ID_KEY, userId);
+    }
   }
 }
