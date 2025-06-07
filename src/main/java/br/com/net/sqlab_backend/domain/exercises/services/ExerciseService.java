@@ -56,7 +56,7 @@ public class ExerciseService {
         ListExercise listExercise = listExerciseService.getById(exercise.listId());
 
         // Salvar exercício
-        Exercise newExercise = exerciseRepository.save(new Exercise(exercise.description(), exercise.dialect(), exercise.type(), exercise.sort(), exercise.isPublic(), exercise.tableName(), professor.get(), listExercise));
+        Exercise newExercise = exerciseRepository.save(new Exercise(exercise.title(), exercise.description(), exercise.dialect(), exercise.type(), exercise.sort(), exercise.isPublic(), exercise.tableName(), professor.get(), listExercise));
 
         // Salvar resposta
         answerProfessorService.save(new AnswerProfessor(exercise.answerProfessor(), newExercise, professor.get()));
@@ -96,6 +96,11 @@ public class ExerciseService {
 
     public List<Exercise> getByListExerciseId(Long id) {
         List<Exercise> exercises = exerciseRepository.findAllByListExerciseId(id);
+        return exercises;
+    }
+
+    public List<Exercise> getByProfessorId(Long id) {
+        List<Exercise> exercises = exerciseRepository.findAllByProfessorId(id);
         return exercises;
     }
 

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.net.sqlab_backend.domain.exceptions.custom.EntityNotFoundException;
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.services.ExerciseService;
+import br.com.net.sqlab_backend.domain.grade.services.GradeService;
 import br.com.net.sqlab_backend.domain.list_exercise.models.ListExercise;
 import br.com.net.sqlab_backend.domain.list_exercise.repositories.ListExerciseRepository;
 
@@ -19,12 +20,21 @@ public class ListExerciseService {
 
     private final ExerciseService exerciseService;
 
-    public ListExerciseService(ListExerciseRepository listExerciseRepository, ExerciseService exerciseService) {
+    private final GradeService gradeService;
+
+    public ListExerciseService(ListExerciseRepository listExerciseRepository, ExerciseService exerciseService, GradeService gradeService) {
         this.listExerciseRepository = listExerciseRepository;
         this.exerciseService = exerciseService;
+        this.gradeService = gradeService;
     }
 
-    public ListExercise save(ListExercise listExercise) {
+    @Transactional
+    public ListExercise save(Long gradeId, ListExercise listExercise) {
+        ListExercise newListExercise = listExerciseRepository.save(listExercise);
+        System.out.println(newListExercise);
+
+        gradeService.addListExercises(gradeId, newListExercise);
+
         return listExerciseRepository.save(listExercise);
     }
 

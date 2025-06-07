@@ -22,6 +22,7 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<UserEntity> findByEmail(String email) {
         return studentRepo.findByEmail(email)
                 .map(s -> (UserEntity) s)
-                .or(() -> professorRepo.findByEmail(email).map(p -> (UserEntity) p));
+                .or(() -> professorRepo.findByEmail(email)
+                .map(p -> (UserEntity) p));
     }
 }

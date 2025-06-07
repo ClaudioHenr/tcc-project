@@ -1,7 +1,9 @@
 package br.com.net.sqlab_backend.domain.exercises.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,14 +51,15 @@ public class ExercisesController {
     @GetMapping("/{id}")
     public ResponseEntity<?>getExercise(@PathVariable Long id) {
         Exercise exercise = exerciseService.getById(id);
-        ResponseGetExerciseDTO dto = new ResponseGetExerciseDTO(id, exercise.getDescription(), exercise.getDialect(), exercise.getType(), exercise.getTableName());
+        ResponseGetExerciseDTO dto = new ResponseGetExerciseDTO(id, exercise.getTitle(), exercise.getDescription(), exercise.getDialect(), exercise.getType(), exercise.getTableName());
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @PostMapping("/create")
     public ResponseEntity<?> createExercise(@RequestBody RequestCreateExerciseDTO request) {
         Exercise exerciseCreated = exerciseService.save(request);
-        ResponseCreateExerciseDTO dto = new ResponseCreateExerciseDTO(exerciseCreated.getId(), 
+        ResponseCreateExerciseDTO dto = new ResponseCreateExerciseDTO(exerciseCreated.getId(),
+                                                            exerciseCreated.getTitle(),
                                                             exerciseCreated.getDescription(), 
                                                             exerciseCreated.getDialect(), 
                                                             exerciseCreated.getType(), 
@@ -77,21 +80,34 @@ public class ExercisesController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteExercise(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deleteExercise(@PathVariable Long id) {
         exerciseService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Exercício excluido com sucesso");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Exercício excluído com sucesso");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     
-    @GetMapping("/list")
+    @GetMapping("/listexercise/list")
     public ResponseEntity<?> getAllExercisesByListExerciseId(@RequestParam Long id) {
         List<Exercise> exercises = exerciseService.getByListExerciseId(id);
         List<ResponseGetExerciseDTO> exercisesDTO = new ArrayList<>();
         for (Exercise exercise : exercises) {
-            exercisesDTO.add(new ResponseGetExerciseDTO(exercise.getId(), exercise.getDescription(), exercise.getDialect(), exercise.getType(), exercise.getTableName()));
+            exercisesDTO.add(new ResponseGetExerciseDTO(exercise.getId(),exercise.getTitle(), exercise.getDescription(), exercise.getDialect(), exercise.getType(), exercise.getTableName()));
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(exercisesDTO);
+        System.out.println(exercisesDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(exercisesDTO);
     }
     
+    @GetMapping("/professor/list")
+    public ResponseEntity<?> getAllExercisesByUserId(@RequestParam Long id) {
+        List<Exercise> exercises = exerciseService.getByProfessorId(id);
+        List<ResponseGetExerciseDTO> exercisesDTO = new ArrayList<>();
+        for (Exercise exercise : exercises) {
+            exercisesDTO.add(new ResponseGetExerciseDTO(exercise.getId(), exercise.getTitle(), exercise.getDescription(), exercise.getDialect(), exercise.getType(), exercise.getTableName()));
+        }
+        System.out.println(exercisesDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(exercisesDTO);
+    }
 
 
 }

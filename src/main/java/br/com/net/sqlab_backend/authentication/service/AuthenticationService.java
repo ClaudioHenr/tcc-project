@@ -3,11 +3,11 @@ package br.com.net.sqlab_backend.authentication.service;
 import br.com.net.sqlab_backend.authentication.dto.AuthRequest;
 import br.com.net.sqlab_backend.authentication.dto.AuthResponse;
 import br.com.net.sqlab_backend.authentication.repository.UserRepository;
+import br.com.net.sqlab_backend.domain.shared.models.UserEntity;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,10 +29,13 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
 
-            UserDetails user = userRepository.findByEmail(request.getEmail())
+            // UserDetails user = userRepository.findByEmail(request.getEmail())
+            //     .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas"));
+            
+            UserEntity userEntity = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas"));
 
-            String token = jwtService.generateToken(user);
+            String token = jwtService.generateToken(userEntity);
             
             return new AuthResponse(token);
         } catch (BadCredentialsException e) {

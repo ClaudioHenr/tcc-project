@@ -30,6 +30,9 @@ public class Exercise {
     private Long id;
 
 	@Column(nullable = false)
+	private String title;
+
+	@Column(nullable = false)
 	private String description;
 
     @Enumerated(EnumType.STRING)
@@ -60,8 +63,9 @@ public class Exercise {
     @ManyToOne
     private ListExercise listExercise;
 
-	public Exercise(String description, Dialect dialect, ExerciseType type, Boolean sort, Boolean isPublic,
+	public Exercise(String title, String description, Dialect dialect, ExerciseType type, Boolean sort, Boolean isPublic,
 			String tableName, Professor professor, ListExercise listExercise) {
+		this.title = title;
 		this.description = description;
 		this.dialect = dialect;
 		this.type = type;

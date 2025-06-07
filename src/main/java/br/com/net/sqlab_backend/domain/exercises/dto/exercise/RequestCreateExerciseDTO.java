@@ -5,6 +5,8 @@ import br.com.net.sqlab_backend.domain.exercises.enums.ExerciseType;
 
 public record RequestCreateExerciseDTO(
 
+    String title,
+
     String description,
 
     Dialect dialect,

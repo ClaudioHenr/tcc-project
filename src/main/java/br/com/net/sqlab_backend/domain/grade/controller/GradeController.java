@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.net.sqlab_backend.domain.grade.dto.RequestCreateGradeDTO;
 import br.com.net.sqlab_backend.domain.grade.dto.ResponseCreateGradeDTO;
 import br.com.net.sqlab_backend.domain.grade.dto.ResponseGetGradeDTO;
 import br.com.net.sqlab_backend.domain.grade.dto.ResponseUpdateGradeDTO;
@@ -36,8 +37,8 @@ public class GradeController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createGrade(@RequestBody Grade entity) {
-        Grade gradeCreated = gradeService.save(entity);
+    public ResponseEntity<?> createGrade(@RequestBody RequestCreateGradeDTO create, @RequestParam Long id) {
+        Grade gradeCreated = gradeService.save(new Grade(null, create.name(), create.subject(), null, null), id);
         ResponseCreateGradeDTO dto = new ResponseCreateGradeDTO(gradeCreated.getId(), gradeCreated.getName(), gradeCreated.getSubject(), gradeCreated.getCod());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
@@ -47,6 +48,17 @@ public class GradeController {
         Grade grade = gradeService.get(id);
         ResponseGetGradeDTO dto = new ResponseGetGradeDTO(grade.getId(), grade.getName(), grade.getSubject(), grade.getCod());
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getGrades(@RequestParam Long id) {
+        List<Grade> grades = gradeService.getGradesByProfessorId(id);
+        System.out.println(grades);
+        List<ResponseGetGradeDTO> dtos = new ArrayList<>();
+        for (Grade grade : grades) {
+            dtos.add(new ResponseGetGradeDTO(grade.getId(), grade.getName(), grade.getSubject(), grade.getCod()));   
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
 
     @PutMapping("/{id}")

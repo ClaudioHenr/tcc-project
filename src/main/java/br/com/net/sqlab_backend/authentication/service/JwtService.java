@@ -4,8 +4,9 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import br.com.net.sqlab_backend.domain.shared.models.UserEntity;
 
 import java.security.Key;
 import java.util.Collection;
@@ -23,13 +24,14 @@ public class JwtService {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return buildToken(userDetails.getUsername(), userDetails.getAuthorities());
+    public String generateToken(UserEntity user) {
+        return buildToken(user.getId(), user.getUsername(), user.getAuthorities());
     }
 
-   private String buildToken(String subject, Collection<? extends GrantedAuthority> authorities) {
+   private String buildToken(Long userId, String subject, Collection<? extends GrantedAuthority> authorities) {
         return Jwts.builder()
                 .setSubject(subject)
+                .claim("userId", userId)
                 .claim("roles", authorities.stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))

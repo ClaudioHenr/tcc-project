@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.net.sqlab_backend.domain.list_exercise.dto.ResponseCreateListExerciseDTO;
@@ -28,8 +29,8 @@ public class ListExerciseController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createListExercise(@RequestBody ListExercise request) {
-        ListExercise entityCreated = listExerciseService.save(request);
+    public ResponseEntity<?> createListExercise(@RequestBody ListExercise request, @RequestParam Long id) {
+        ListExercise entityCreated = listExerciseService.save(id, request);
         ResponseCreateListExerciseDTO dto = new ResponseCreateListExerciseDTO(entityCreated.getId(), entityCreated.getTitle(), entityCreated.getDescription());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }

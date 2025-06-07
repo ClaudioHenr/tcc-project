@@ -7,6 +7,8 @@ public record ResponseCreateExerciseDTO(
 
     Long id,
 
+    String title,
+
     String description,
 
     Dialect dialect,

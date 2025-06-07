@@ -6,6 +6,8 @@ import br.com.net.sqlab_backend.domain.exercises.enums.ExerciseType;
 public record ResponseGetExerciseDTO(
 
     Long id,
+
+    String title,
     
     String description,
 
