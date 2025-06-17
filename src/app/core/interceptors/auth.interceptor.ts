@@ -36,7 +36,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error) => {
       if (error.status === 401) {
         tokenService.removeToken();
-        router.navigate(['/auth/signin']);
+        router.navigate(['/professor/grades']);
       }
       throw error;
     })

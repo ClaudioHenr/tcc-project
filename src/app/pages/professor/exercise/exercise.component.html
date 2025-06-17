@@ -70,6 +70,9 @@
       <label for="tableName" class="block mb-2 text-sm font-medium text-gray-700">
         Tabela Referente
       </label>
+      <span class="p-2 text-sm text-gray-500">
+        A plataforma oferece duas tabelas para a criação dos exercícios
+      </span>
       <select
         id="tipo"
         name="tableName"
@@ -83,6 +86,73 @@
       <p *ngIf="form.submitted && !exercise.tableName" class="text-red-500 text-sm">
         Este campo é obrigatório.
       </p>
+    </div>
+
+    <div>
+      <span class="p-2 text-sm text-gray-500" >Diagrama das tabelas disponibilizadas</span>
+      <img class="rounded-2xl" src="./../../../../assets/images/der_exercises_tables.png" width="700" height="200" >
+    </div>
+
+    <div class="bg-white rounded-lg">
+        <button
+          type="button"
+          (click)="toggleMaisInfo()"
+          class="text-blue-600 hover:underline text-sm"
+        >
+          {{ showDataTables ? 'Ocultar dados das tabelas' : 'Mostrar dados das tabelas' }}
+        </button>
+    
+         @if (showDataTables) {
+          <div class="mt-4 overflow-x-auto rounded-xl">
+            <span class="p-2 text-sm text-gray-500">Tabela USERS</span>
+            <table class="w-full text-sm text-left text-gray-500 border border-gray-200">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                <tr>
+                  <th class="px-4 py-2">ID</th>
+                  <th class="px-4 py-2">NAME</th>
+                  <th class="px-4 py-2">AGE</th>
+                  <th class="px-4 py-2">BIRTH DATE</th>
+                  <th class="px-4 py-2">HAS DRIVER LICENSE</th>          
+                </tr>
+              </thead>
+                <tbody>
+                @for (item of dataUserTable; track $index) {
+                  <tr class="bg-white border-b">
+                    <td class="px-4 py-2">{{ item.id }}</td>
+                    <td class="px-4 py-2">{{ item.name }}</td>
+                    <td class="px-4 py-2">{{ item.age }}</td>
+                    <td class="px-4 py-2">{{ item.birth_date | date: 'dd/MM/yyyy' }}</td>
+                    <td class="px-4 py-2">{{ item.has_driver_license }}</td>
+                  </tr>
+                }
+                </tbody>
+             </table>
+            </div>
+
+            <div class="mt-4 overflow-x-auto rounded-xl">
+            <span class="p-2 text-sm text-gray-500">Tabela ORDERS</span>
+            <table class="w-full text-sm text-left text-gray-500 border border-gray-200">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                <tr>
+                  <th class="px-4 py-2">ORDER DATE</th>
+                  <th class="px-4 py-2">TOTAL AMOUNT</th>
+                  <th class="px-4 py-2">STATUS</th>
+                  <th class="px-4 py-2">USER ID</th>
+                </tr>
+              </thead>
+              <tbody>
+               @for (item of dataOrderTable; track $index) {
+                 <tr class="bg-white border-b">
+                   <td class="px-4 py-2">{{ item.order_date | date: 'dd/MM/yyyy' }}</td>
+                   <td class="px-4 py-2">{{ item.total_amount }}</td>
+                   <td class="px-4 py-2">{{ item.status }}</td>
+                   <td class="px-4 py-2">{{ item.userId }}</td>
+                 </tr>
+               }
+              </tbody>
+            </table>
+          </div>
+         }
     </div>
 
     <!-- Descrição -->
