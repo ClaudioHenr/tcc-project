@@ -1,6 +1,7 @@
 package br.com.net.sqlab_backend.domain.exercises.models;
 
 import br.com.net.sqlab_backend.domain.student.models.Student;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +20,7 @@ public class AnswerStudent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+	@Column(length = 500)
     private String answer;
 
     private boolean isCorrect;

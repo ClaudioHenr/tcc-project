@@ -21,7 +21,7 @@ public class AnswerProfessor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String answer;
 
     @JoinColumn(name = "professor_id")
