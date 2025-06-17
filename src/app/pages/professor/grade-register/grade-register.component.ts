@@ -31,7 +31,6 @@ export class GradeRegisterComponent {
   createGrade() {
     this.gradeService.create(this.grade).subscribe({
       next: (data: any) => {
-        console.log(data)
         this.codGrade = data.cod;
         alert(`Turma "${this.grade.name}" cadastrada com sucesso`);
       }, error: (err: any) => {

@@ -19,7 +19,7 @@ export class ExerciseService {
   ) { }
 
   getExercisesByListExerciseId(id: string) {
-    return this.http.get(`${this.apiUrl}/api/exercise/list`, {
+    return this.http.get(`${this.apiUrl}/api/exercise/listexercise/list`, {
       params: { "id": id }
     })
     .pipe(

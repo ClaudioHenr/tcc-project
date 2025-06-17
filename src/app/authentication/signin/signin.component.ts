@@ -52,7 +52,7 @@ export class SigninComponent {
           // this.router.navigate(['/professor/home']);
           this.router.navigate(['/professor/grades']);
         } else if (userRole === AppRoles.STUDENT) {
-          this.router.navigate(['/student/home']);
+          this.router.navigate(['/student/grades']);
         } else {
           this.router.navigate(['/']);
         }

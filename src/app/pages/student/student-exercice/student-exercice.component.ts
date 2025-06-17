@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import * as ace from 'ace-builds';
 import { ExerciseService } from '../services/exercise/exercise.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { TokenService } from '../../../core/services/token.service';
 
 interface Exercise {
   id: string;
@@ -38,18 +39,20 @@ export class StudentExerciceComponent implements OnInit, AfterViewInit {
   protected queryExercise!: QueryExercise;
   responseExercise!: ResponseExercise;
 
-  imageUrl = ''; // Se quiser usar uma imagem, coloque a URL aqui
+  imageUrl = './../../../../assets/images/der_exercises_tables.png'; // Se quiser usar uma imagem, coloque a URL aqui
   private editor: ace.Ace.Editor | undefined;
 
   errorMessage: string = '';
 
   constructor(
+    private tokenExercise: TokenService,
     private exerciseService: ExerciseService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
-    this.studentId = "1";
+    this.studentId = this.tokenExercise.getUserId();
 
     this.exerciseId = this.route.snapshot.paramMap.get("id");
     if (this.exerciseId) {
@@ -109,6 +112,8 @@ export class StudentExerciceComponent implements OnInit, AfterViewInit {
         query: respostaSQL
       };
 
+      console.log("QUERYEXERCISE: " + queryExercise.studentId)
+
       this.exerciseService.sentAnswer(queryExercise).subscribe({
         next: (data: ResponseExercise) => {
           this.responseExercise = data;
@@ -120,6 +125,10 @@ export class StudentExerciceComponent implements OnInit, AfterViewInit {
     } else {
       console.error("Não é possível enviar resposta por falta de parametros obrigatórios");
     }
+  }
+
+  back() {
+    this.location.back();
   }
 
 }

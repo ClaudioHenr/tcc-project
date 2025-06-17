@@ -49,4 +49,8 @@ export class StudentCatalogExercisesComponent implements OnInit {
     this.router.navigate(['student/exercise', id])
   }
 
+  back() {
+    this.location.back();
+  }
+
 }
