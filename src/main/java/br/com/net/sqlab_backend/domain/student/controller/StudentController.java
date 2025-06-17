@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/students") // Padrão em inglês
@@ -46,5 +47,11 @@ public class StudentController {
         List<Grade> grades = studentService.getGrades(id);
         
         return ResponseEntity.status(HttpStatus.OK).body(grades);
+    }
+
+    @PostMapping("/grades/register")
+    public ResponseEntity<?> registerStudentInGradeByCodGrade(@RequestParam Long id, @RequestParam String codGrade) {
+        studentService.registerInGrade(id, codGrade);
+       return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Registrado com sucesso"));
     }
 }

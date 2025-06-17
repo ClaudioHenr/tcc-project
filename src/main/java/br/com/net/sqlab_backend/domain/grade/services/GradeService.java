@@ -96,4 +96,12 @@ public class GradeService {
         gradeRepository.save(grade);
     }
 
+    public Grade getGradeBycod(String cod) {
+        Optional<Grade> optional = gradeRepository.findByCod(cod);
+        if (optional.isEmpty()) {
+            throw new EntityNotFoundException("Turma não encontrada");
+        }
+        return optional.get();
+    }
+
 }

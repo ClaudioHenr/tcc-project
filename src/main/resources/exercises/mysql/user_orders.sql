@@ -8,7 +8,7 @@ CREATE TABLE users (
 );
 
 INSERT INTO users (name, age, birth_date, has_driver_license) VALUES 
-('Claudio Henrique', 30, '1994-05-15', TRUE),
+('Luiz Fernando', 30, '1994-05-15', TRUE),
 ('Elisabeth', 30, '1996-07-22', FALSE),
 ('Marcos Silva', 30, '1989-03-10', TRUE),
 ('Ana Paula', 30, '1998-09-05', FALSE),

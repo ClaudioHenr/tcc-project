@@ -2,6 +2,7 @@ package br.com.net.sqlab_backend.domain.student.services;
 
 import br.com.net.sqlab_backend.domain.exceptions.custom.EntityNotFoundException;
 import br.com.net.sqlab_backend.domain.grade.models.Grade;
+import br.com.net.sqlab_backend.domain.grade.services.GradeService;
 import br.com.net.sqlab_backend.domain.student.models.Student;
 import br.com.net.sqlab_backend.domain.student.repositories.StudentGradeRepository;
 import br.com.net.sqlab_backend.domain.student.repositories.StudentRepository;
@@ -19,11 +20,18 @@ public class StudentService {
     private final StudentGradeRepository studentGradeRepository;
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final GradeService gradeService;
     
-    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder, StudentGradeRepository studentGradeRepository) {
+    public StudentService(StudentRepository studentRepository, 
+                        PasswordEncoder passwordEncoder, 
+                        StudentGradeRepository studentGradeRepository, 
+                        GradeService gradeService
+    ) {
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
         this.studentGradeRepository = studentGradeRepository;
+        this.gradeService = gradeService;
     }
 
     public Student getById(Long id) {
@@ -35,7 +43,7 @@ public class StudentService {
     }
     
     public Student saveStudent(Student student) {
-    	 student.setPassword(passwordEncoder.encode(student.getPassword()));
+    	student.setPassword(passwordEncoder.encode(student.getPassword()));
         return studentRepository.save(student);
     }
 
@@ -64,4 +72,11 @@ public class StudentService {
 		grades = studentGradeRepository.findGradesByStudentId(id);
 		return grades;
 	}
+
+    public void registerInGrade(Long id, String codGrade) {
+        Student entity = getById(id);
+        Grade found = gradeService.getGradeBycod(codGrade);
+        entity.getGrades().add(found);
+        studentRepository.save(entity);
+    }
 }

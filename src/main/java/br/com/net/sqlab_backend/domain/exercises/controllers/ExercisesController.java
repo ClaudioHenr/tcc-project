@@ -1,7 +1,6 @@
 package br.com.net.sqlab_backend.domain.exercises.controllers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,9 +81,7 @@ public class ExercisesController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deleteExercise(@PathVariable Long id) {
         exerciseService.delete(id);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Exercício excluído com sucesso");
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Exercício excluído com sucesso"));
     }
     
     @GetMapping("/listexercise/list")

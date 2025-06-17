@@ -1,7 +1,9 @@
 package br.com.net.sqlab_backend.domain.grade.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +73,9 @@ public class GradeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteGrade(@PathVariable Long id) {
         gradeService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Turma excluida com sucesso");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Turma excluida com sucesso");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     
     @GetMapping("/listexercises")
@@ -83,5 +87,6 @@ public class GradeController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
+
     
 }
