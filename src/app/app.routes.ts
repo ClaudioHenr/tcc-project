@@ -43,8 +43,8 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: AppRoles.PROFESSOR },
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: ProfessorHomeComponent }, // IGNORAR, USAR GRADES
+      { path: '', redirectTo: 'grades', pathMatch: 'full' },
+      // { path: 'home', component: ProfessorHomeComponent }, // IGNORAR, USAR GRADES
       { path: 'exercise/:id', component: ExerciseComponent },
       { path: 'exercise-list/:id', component: ExerciseListComponent },
       { path: 'grades', component: GradesComponent },
@@ -61,8 +61,8 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: AppRoles.STUDENT },
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: StudentHomeComponent }, // IGNORAR, USAR GRADES
+      { path: '', redirectTo: 'grades', pathMatch: 'full' },
+      // { path: 'home', component: StudentHomeComponent }, // IGNORAR, USAR GRADES
       { path: 'grades', component: StudentGradeComponent },
       { path: 'lists/:id', component: StudentListComponent },
       { path: 'catalog-exercises/:id', component: StudentCatalogExercisesComponent },
