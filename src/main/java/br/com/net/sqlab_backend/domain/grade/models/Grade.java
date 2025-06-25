@@ -50,7 +50,11 @@ public class Grade {
     )
     private Set<ListExercise> listExercises = new HashSet<>();   
 
-    @Override
+    public Grade(Object object, String name2, String subject2, Object object2, Object object3) {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -122,6 +126,14 @@ public class Grade {
 
 	public void setListExercises(Set<ListExercise> listExercises) {
 		this.listExercises = listExercises;
+	}
+
+	public String getCod() {
+		return cod;
+	}
+
+	public void setCod(String cod) {
+		this.cod = cod;
 	}
 
     

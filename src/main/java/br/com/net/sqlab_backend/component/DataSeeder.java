@@ -1,29 +1,24 @@
 package br.com.net.sqlab_backend.component;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import br.com.net.sqlab_backend.domain.exercises.enums.Dialect;
-import br.com.net.sqlab_backend.domain.exercises.enums.ExerciseType;
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.repositories.AnswerProfessorRepository;
 import br.com.net.sqlab_backend.domain.exercises.repositories.ExerciseRepository;
 import br.com.net.sqlab_backend.domain.grade.repository.GradeRepository;
 import br.com.net.sqlab_backend.domain.list_exercise.repositories.ListExerciseRepository;
-import br.com.net.sqlab_backend.domain.professor.models.Professor;
 import br.com.net.sqlab_backend.domain.student.models.Student;
 import br.com.net.sqlab_backend.domain.student.repositories.StudentRepository;
 
+@SuppressWarnings("unused")
 @Component
-@Profile({"prod"})
+//@Profile({"prod"})
 public class DataSeeder implements CommandLineRunner {
 
     private final ExerciseRepository exerciseRepository;
-    private final AnswerProfessorRepository answerRepository;
+	private final AnswerProfessorRepository answerRepository;
     private final StudentRepository studentRepository;
     private final GradeRepository gradeRepository;
     private final ListExerciseRepository listExerciseRepository;

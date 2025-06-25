@@ -108,5 +108,53 @@ public class Exercise {
 		this.listExercise = listExercise;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public ExerciseType getType() {
+		return type;
+	}
+
+	public void setType(ExerciseType type) {
+		this.type = type;
+	}
+
+	public Boolean getSort() {
+		return sort;
+	}
+
+	public void setSort(Boolean sort) {
+		this.sort = sort;
+	}
+
+	public Boolean getIsPublic() {
+		return isPublic;
+	}
+
+	public void setIsPublic(Boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
     
 }
