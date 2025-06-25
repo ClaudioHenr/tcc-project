@@ -18,7 +18,7 @@ export class GradesComponent implements OnInit {
     private gradeService: GradeService,
     private router: Router,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getGrades();
@@ -51,13 +51,15 @@ export class GradesComponent implements OnInit {
   viewLists(gradeId: number): void {
     this.router.navigate(['/professor/lists', gradeId]);
   }
-  
   goToGradeRegister() {
     this.router.navigate(['/professor/grade-register']);
   }
-  
   goToListExerciseRegister(gradeId: number): void {
-    this.router.navigate(['/professor/list-register', gradeId], { queryParams: {isEdit: false} });
+    this.router.navigate(['/professor/list-register', gradeId], { queryParams: { isEdit: false } });
+  }
+  
+  goToStudentRanking(): void {
+    this.router.navigate(['/professor/student-ranking']);
   }
 
   back(): void {

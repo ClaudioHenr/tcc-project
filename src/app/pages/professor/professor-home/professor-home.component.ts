@@ -21,6 +21,7 @@ export class ProfessorHomeComponent {
   cardsInfo: CardInfo[] = [
     { title: "Gerenciar Turmas", description: "Gerencie suas turmas", route: "/professor/grades" },
     { title: "Gerenciar Listas", description: "Gerencie as listas de exercícios", route: "/professor/lists" },
-    { title: "Cadastrar Exercício", description: "Cadastre um novo exercício!", route: "/professor/exercise" }
+    { title: "Cadastrar Exercício", description: "Cadastre um novo exercício!", route: "/professor/exercise" },
+    { title: "Ranking de Alunos", description: "Visualize o desempenho dos alunos", route: "/professor/student-ranking" } // New card
   ]
 }
