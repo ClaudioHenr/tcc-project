@@ -3,9 +3,14 @@ package br.com.net.sqlab_backend.domain.grade.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.net.sqlab_backend.domain.list_exercise.models.ListExercise;
+import br.com.net.sqlab_backend.domain.student.models.Student;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,7 +54,12 @@ public class Grade {
         inverseJoinColumns = @JoinColumn(name = "list_exercise_id")
     )
     private Set<ListExercise> listExercises = new HashSet<>();   
-
+    
+    @JsonIgnore
+    @ManyToMany(mappedBy = "grades") 
+    private Set<Student> students = new HashSet<>();
+    
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -92,6 +102,31 @@ public class Grade {
         return result;
     }
 
+    
+    
+    
+	public Grade() {
+		super();
+	}
+
+	public Grade(Long id, String name, String subject, String cod) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.subject = subject;
+		this.cod = cod;
+	}
+
+	
+	public Grade(Long id, String name, String subject, String cod, Set<ListExercise> listExercises) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.subject = subject;
+		this.cod = cod;
+		this.listExercises = listExercises;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -122,6 +157,22 @@ public class Grade {
 
 	public void setListExercises(Set<ListExercise> listExercises) {
 		this.listExercises = listExercises;
+	}
+
+	public String getCod() {
+		return cod;
+	}
+
+	public void setCod(String cod) {
+		this.cod = cod;
+	}
+
+	public Set<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(Set<Student> students) {
+		this.students = students;
 	}
 
     

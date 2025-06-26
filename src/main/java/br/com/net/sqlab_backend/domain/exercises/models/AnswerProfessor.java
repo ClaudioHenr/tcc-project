@@ -10,10 +10,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Table(name = "answer_professor")
+@Table(name = "answer_professor", uniqueConstraints = { // <--- Adicione esta anotação
+	    @UniqueConstraint(columnNames = {"exercise_id"}) // <--- Garanta que exercise_id é único
+	})
 @Entity
 public class AnswerProfessor {
     

@@ -19,7 +19,7 @@ import br.com.net.sqlab_backend.domain.student.models.Student;
 import br.com.net.sqlab_backend.domain.student.repositories.StudentRepository;
 
 @Component
-@Profile({"prod"})
+@Profile({"dev"})
 public class DataSeeder implements CommandLineRunner {
 
     private final ExerciseRepository exerciseRepository;
