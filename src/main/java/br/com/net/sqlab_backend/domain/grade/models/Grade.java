@@ -60,7 +60,11 @@ public class Grade {
     private Set<Student> students = new HashSet<>();
     
     
-    @Override
+    public Grade(Object object, String name2, String subject2, Object object2, Object object3) {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -173,6 +177,14 @@ public class Grade {
 
 	public void setStudents(Set<Student> students) {
 		this.students = students;
+	}
+
+	public String getCod() {
+		return cod;
+	}
+
+	public void setCod(String cod) {
+		this.cod = cod;
 	}
 
     

@@ -154,5 +154,7 @@ public class Exercise {
 
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
-	}    
+	}
+
+    
 }
