@@ -99,9 +99,11 @@ export class ListexerciseService {
   }
 
   // Seus outros métodos (createListExercise, etc.) permanecem inalterados
-  createListExercise(gradeId: string, listData: list) {
+  createListExercise(gradeId: string, listData: any) {
     // Implemente a lógica de mock para criação se necessário, ou chame o backend
-    return this.http.post(`${this.api}/api/listexercise/create?id=${gradeId}`, listData)
+    return this.http.post(`${this.api}/api/listexercise/create`, listData, {
+      params: { "id": gradeId }
+    })
       .pipe(
         tap((data) => console.log('List created (backend):', data)),
         catchError((err: HttpErrorResponse) => {

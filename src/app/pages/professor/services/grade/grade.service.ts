@@ -76,8 +76,8 @@ export class GradeService {
     console.log('Usando dados mockados para turmas.');
     const mockGrades = [
       { id: 1, name: 'Turma A - Banco de Dados I', cod: 'ABC123' },
-      { id: 2, name: 'Turma B - Programação Web', cod: 'DEF456' },
-      { id: 3, name: 'Turma C - Estrutura de Dados', cod: 'GHI789' },
+      { id: 2, name: 'Turma B - Banco de Dados II', cod: 'DEF456' },
+      { id: 3, name: 'Turma C - Banco de Dados III', cod: 'GHI789' },
     ];
     return of(mockGrades).pipe(delay(300));
   }

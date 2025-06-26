@@ -18,12 +18,16 @@ import { ListexerciseService } from '../services/lists/listexercise.service';
   styleUrl: './list-register.component.css'
 })
 export class ListRegisterComponent implements OnInit  {
-  list: list = {
-    id: 0,
+  list: any = {
     title: '',
     description: '',
-    exerciseIds: [],
   };
+  // list: list = {
+  //   id: 0,
+  //   title: '',
+  //   description: '',
+  //   exerciseIds: [],
+  // };
 
   gradeId: string = '';
 
@@ -43,12 +47,15 @@ export class ListRegisterComponent implements OnInit  {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
+      console.log(params['isEdit'])
       this.isEditMode = params['isEdit'] === 'true';
+      console.log(this.isEditMode)
     })
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.gradeId = id;
       if (this.isEditMode) {
+        console.log('eeee')
         this.loadExerciseList(id);
         this.loadExercisesByUserId();
       }
