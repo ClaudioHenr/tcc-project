@@ -3,14 +3,12 @@ package br.com.net.sqlab_backend.domain.grade.models;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.net.sqlab_backend.domain.list_exercise.models.ListExercise;
 import br.com.net.sqlab_backend.domain.student.models.Student;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -177,16 +175,6 @@ public class Grade {
 
 	public void setStudents(Set<Student> students) {
 		this.students = students;
-	}
-
-	public String getCod() {
-		return cod;
-	}
-
-	public void setCod(String cod) {
-		this.cod = cod;
-	}
-
-    
+	}    
     
 }
