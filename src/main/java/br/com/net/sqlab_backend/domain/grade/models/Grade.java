@@ -3,7 +3,10 @@ package br.com.net.sqlab_backend.domain.grade.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.net.sqlab_backend.domain.list_exercise.models.ListExercise;
+import br.com.net.sqlab_backend.domain.student.models.Student;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,13 +18,11 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "listExercises")
 // @EqualsAndHashCode(onlyExplicitlyIncluded = true) // sem esta parada não funciona sa joça - apenas campos com @EqualsAndHashCode.Include vão ser incluidos nos métodos equals() e hashCode()
@@ -49,8 +50,17 @@ public class Grade {
         inverseJoinColumns = @JoinColumn(name = "list_exercise_id")
     )
     private Set<ListExercise> listExercises = new HashSet<>();   
+    
+    @JsonIgnore
+    @ManyToMany(mappedBy = "grades") 
+    private Set<Student> students = new HashSet<>();
+    
+    
+    public Grade(Object object, String name2, String subject2, Object object2, Object object3) {
+		// TODO Auto-generated constructor stub
+	}
 
-    @Override
+	@Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -92,6 +102,31 @@ public class Grade {
         return result;
     }
 
+    
+    
+    
+	public Grade() {
+		super();
+	}
+
+	public Grade(Long id, String name, String subject, String cod) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.subject = subject;
+		this.cod = cod;
+	}
+
+	
+	public Grade(Long id, String name, String subject, String cod, Set<ListExercise> listExercises) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.subject = subject;
+		this.cod = cod;
+		this.listExercises = listExercises;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -124,6 +159,20 @@ public class Grade {
 		this.listExercises = listExercises;
 	}
 
-    
+	public String getCod() {
+		return cod;
+	}
+
+	public void setCod(String cod) {
+		this.cod = cod;
+	}
+
+	public Set<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(Set<Student> students) {
+		this.students = students;
+	}    
     
 }

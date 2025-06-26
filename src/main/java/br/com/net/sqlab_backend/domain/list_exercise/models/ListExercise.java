@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,7 @@ public class ListExercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true) 
     private String title;
 
     private String description;

@@ -51,4 +51,5 @@ public class AuthValidation {
         
         return hasUpper && hasLower && hasNumber;
     }
+    
 }

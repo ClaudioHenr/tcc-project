@@ -55,7 +55,6 @@ public class GradeController {
     @GetMapping("/list")
     public ResponseEntity<?> getGrades(@RequestParam Long id) {
         List<Grade> grades = gradeService.getGradesByProfessorId(id);
-        System.out.println(grades);
         List<ResponseGetGradeDTO> dtos = new ArrayList<>();
         for (Grade grade : grades) {
             dtos.add(new ResponseGetGradeDTO(grade.getId(), grade.getName(), grade.getSubject(), grade.getCod()));   
