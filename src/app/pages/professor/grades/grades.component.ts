@@ -60,6 +60,14 @@ export class GradesComponent implements OnInit {
     this.router.navigate(['/professor/list-register', gradeId], { queryParams: {isEdit: false} });
   }
 
+  goToManageStudents() {
+    this.router.navigate(['/professor/grade-students']);
+  }
+
+  deleteGrade() {
+    
+  }
+
   back(): void {
     this.location.back();
   }

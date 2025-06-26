@@ -24,6 +24,7 @@ import { StudentCatalogExercisesComponent } from './pages/student/student-catalo
 import { ListRegisterComponent } from './pages/professor/list-register/list-register.component';
 import { GradeStudentsComponent } from './pages/professor/grade-students/grade-students.component';
 import { StudentAnswersComponent } from './pages/professor/student-answers/student-answers.component';
+import { StudentAnswersHistoricComponent } from './pages/student/student-answers-historic/student-answers-historic.component';
 
 export const routes: Routes = [
   {
@@ -66,7 +67,8 @@ export const routes: Routes = [
       { path: 'grades', component: StudentGradeComponent },
       { path: 'lists/:id', component: StudentListComponent },
       { path: 'catalog-exercises/:id', component: StudentCatalogExercisesComponent },
-      { path: 'exercise/:id', component: StudentExerciceComponent }
+      { path: 'exercise/:id', component: StudentExerciceComponent },
+      { path: 'answers-historic/:id', component: StudentAnswersHistoricComponent }
     ]
   },
   {

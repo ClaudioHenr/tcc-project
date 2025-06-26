@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -16,7 +16,9 @@ export class GradeStudentsComponent implements OnInit {
   acceptedStudents = [
     { id: 1, name: 'Maria Silva', email: 'maria@email.com' },
     { id: 2, name: 'João Santos', email: 'joao@email.com' },
-    { id: 3, name: 'Ana Costa', email: 'ana@email.com' },
+    { id: 3, name: 'Jorge Costa', email: 'jorge@email.com' },
+    { id: 4, name: 'Amanda Julia', email: 'amanda@email.com' },
+    { id: 5, name: 'Luiz Henrique', email: 'luis.henrique@email.com' },
   ];
 
   pendingRequests = [
@@ -24,7 +26,10 @@ export class GradeStudentsComponent implements OnInit {
     { id: 5, name: 'Fernanda Souza', email: 'fernanda@email.com' },
   ];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router, 
+    private location: Location
+  ) {}
 
   ngOnInit(): void {}
 
@@ -48,5 +53,9 @@ export class GradeStudentsComponent implements OnInit {
     this.router.navigate(['/professor/student-answers'], {
       queryParams: { studentId },
     });
+  }
+
+  back(): void {
+    this.location.back();
   }
 }

@@ -1,0 +1,54 @@
+<!-- <div class="p-6 sm:ml-64 mt-20 mx-auto max-w-5xl"> -->
+<div class="p-6 sm:ml-64 mt-14 mx-auto">
+    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md space-y-6">
+        <button
+          (click)="back()"
+        >
+          Voltar
+        </button>
+
+        <!-- Dados do Aluno -->
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h1 class="text-2xl font-bold mb-4">Histórico de tentativas de resolução do exercício</h1>
+          <p><strong>Turma:</strong> {{ infoHistoric.gradeName }}</p>
+          <p><strong>Lista:</strong> {{ infoHistoric.listName }}</p>
+        </div>
+      
+        <!-- Lista de Exercícios -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-xl font-semibold">{{ exercise.title }}</h3>
+            <p class="text-xs text-gray-700 mb-2">{{ exercise.dialect }}</p>
+            <p class="mb-4 text-gray-700">{{ exercise.description }}</p>
+      
+            <div>
+                <h4 class="font-medium mb-2">Tentativas:</h4>
+    
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white text-gray-800 rounded-lg shadow">
+                    <thead class="bg-gray-200">
+                        <tr>
+                        <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Resposta</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Resultado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (item of tries; track $index) {
+                            @if (item.is_correct) {
+                                <tr class="border-b bg-green-50">
+                                    <td class="px-6 py-4">{{ item.answer }}</td>
+                                    <td class="px-6 py-4 text-green-600 font-medium">Correto</td>
+                                </tr>
+                            } @else {
+                                <tr class="border-b bg-red-50">
+                                    <td class="px-6 py-4">{{ item.answer }}</td>
+                                    <td class="px-6 py-4 text-red-600 font-medium">Incorreto</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

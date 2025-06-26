@@ -49,6 +49,11 @@ export class StudentCatalogExercisesComponent implements OnInit {
     this.router.navigate(['student/exercise', id])
   }
 
+  goToAnswersHistoric(id: string) {
+    this.router.navigate(['student/answers-historic', id])
+  }
+
+
   back() {
     this.location.back();
   }
