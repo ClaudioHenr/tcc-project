@@ -1,5 +1,11 @@
-<div class="p-6 sm:ml-64 mt-14 mx-auto">
+<div class="p-6 sm:ml-64 mt-24 mx-auto">
     <div class="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-md">
+
+    <button class="mb-2"
+        (click)="back()"
+    >
+        Voltar
+    </button>
     <!-- Cabeçalho -->
     <div class="flex items-center justify-between mb-6">
         <div>
@@ -24,13 +30,13 @@
             <div class="flex space-x-2">
             <button
                 (click)="acceptStudent(student.id)"
-                class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg"
             >
                 Aceitar
             </button>
             <button
                 (click)="rejectStudent(student.id)"
-                class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg"
             >
                 Recusar
             </button>
@@ -59,13 +65,13 @@
             <div class="flex space-x-2">
             <button
                 (click)="viewStudentAnswers(student.id)"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg"
             >
                 Visualizar Exercícios
             </button>
             <button
                 (click)="removeStudent(student.id)"
-                class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg"
             >
                 Remover
             </button>

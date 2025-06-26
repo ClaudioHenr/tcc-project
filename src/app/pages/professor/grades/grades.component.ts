@@ -62,6 +62,14 @@ export class GradesComponent implements OnInit {
     this.router.navigate(['/professor/student-ranking']);
   }
 
+  goToManageStudents() {
+    this.router.navigate(['/professor/grade-students']);
+  }
+
+  deleteGrade() {
+    
+  }
+
   back(): void {
     this.location.back();
   }
