@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StudentService } from '../../student/services/student/student.service'; // Usar o serviço de estudante para ranking
+import { StudentService } from '../../student/services/student/student.service'; 
 import { StudentRanking } from '../../../models/student-ranking.model';
-import { GradeService as ProfessorGradeService } from '../../professor/services/grade/grade.service'; // Importar o GradeService do Professor
-import { ListexerciseService as ProfessorListService } from '../../professor/services/lists/listexercise.service'; // Importar o ListexerciseService do Professor
+import { GradeService as ProfessorGradeService } from '../../professor/services/grade/grade.service'; 
+import { ListexerciseService as ProfessorListService } from '../../professor/services/lists/listexercise.service'; 
 import { TokenService } from '../../../core/services/token.service';
-import { environment } from '../../../../environments/environment'; // Importado para verificar o ambiente
+import { environment } from '../../../../environments/environment'; 
 
 @Component({
   selector: 'app-student-ranking',
@@ -120,7 +120,6 @@ export class StudentRankingComponent implements OnInit {
               return b.totalCorrectAnswers - a.totalCorrectAnswers;
             }
             // 2º: Menor Número de tentativas (crescente)
-            // Alterado: Acessando a propriedade corrigida
             if (a.totalExercisesAttempted !== b.totalExercisesAttempted) {
               return a.totalExercisesAttempted - b.totalExercisesAttempted;
             }
@@ -137,27 +136,6 @@ export class StudentRankingComponent implements OnInit {
     } else {
       this.studentRankings = []; // Limpa o ranking se nenhuma turma for selecionada
     }
-  }
-
-  /**
-   * Lida com o evento de mudança para o dropdown de turmas.
-   * @param event O evento de mudança.
-   */
-  onGradeChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    this.selectedGradeId = target.value;
-    this.loadListsByGrade(this.selectedGradeId); // Carrega as listas para a turma recém-selecionada
-    this.fetchRanking(); // Busca o ranking com base na nova seleção de turma
-  }
-
-  /**
-   * Lida com o evento de mudança para o dropdown de listas.
-   * @param event O evento de mudança.
-   */
-  onListChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    this.selectedListId = target.value;
-    this.fetchRanking(); // Busca o ranking com base na nova seleção de lista
   }
 
   /**
