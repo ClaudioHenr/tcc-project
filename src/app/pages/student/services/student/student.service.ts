@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { TokenService } from '../../../../core/services/token.service';
-import { catchError, tap, throwError, Observable, of } from 'rxjs'; // Adicionado 'of'
+import { catchError, tap, throwError, Observable, of } from 'rxjs';
 import { StudentRanking } from '../../../../models/student-ranking.model';
-import { delay } from 'rxjs/operators'; // Adicionado 'delay'
+import { delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +79,7 @@ export class StudentService {
       return this.http.get<StudentRanking[]>(`${this.api}/students/ranking`, { params })
         .pipe(
           tap((data) => console.log('Ranking data (backend):', data)),
+          // Alterado: Tipagem explícita para 'err'
           catchError((err: HttpErrorResponse) => {
             console.error('Error fetching student ranking (backend):', err);
             return throwError(() => new Error('Failed to fetch student ranking. Please try again later.'));
