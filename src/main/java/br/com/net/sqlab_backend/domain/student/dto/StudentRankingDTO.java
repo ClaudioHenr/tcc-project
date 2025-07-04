@@ -1,21 +1,21 @@
 package br.com.net.sqlab_backend.domain.student.dto;
 
 public class StudentRankingDTO {
+
     private Long studentId;
     private String studentName;
     private int totalCorrectAnswers;
-    private int totalExercises;
+    private int totalExercisesAttempted; // Alterado: Nome do campo padronizado para camelCase
     private double score;
 
-    public StudentRankingDTO(Long studentId, String studentName, int totalCorrectAnswers, int totalExercises, double score) {
+    public StudentRankingDTO(Long studentId, String studentName, int totalCorrectAnswers, int totalExercisesAttempted, double score) {
         this.studentId = studentId;
         this.studentName = studentName;
         this.totalCorrectAnswers = totalCorrectAnswers;
-        this.totalExercises = totalExercises;
+        this.totalExercisesAttempted = totalExercisesAttempted;
         this.score = score;
     }
 
-    // Getters and Setters
     public Long getStudentId() {
         return studentId;
     }
@@ -40,12 +40,14 @@ public class StudentRankingDTO {
         this.totalCorrectAnswers = totalCorrectAnswers;
     }
 
-    public int getTotalExercises() {
-        return totalExercises;
+    // Alterado: Getter para o campo padronizado
+    public int getTotalExercisesAttempted() {
+        return totalExercisesAttempted;
     }
 
-    public void setTotalExercises(int totalExercises) {
-        this.totalExercises = totalExercises;
+    // Alterado: Setter para o campo padronizado
+    public void setTotalExercisesAttempted(int totalExercisesAttempted) {
+        this.totalExercisesAttempted = totalExercisesAttempted;
     }
 
     public double getScore() {
