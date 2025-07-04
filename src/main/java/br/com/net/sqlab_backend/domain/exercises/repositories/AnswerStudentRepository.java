@@ -24,13 +24,14 @@ public interface AnswerStudentRepository extends JpaRepository<AnswerStudent, Lo
      * @return Uma lista de AnswerStudent, representando a última tentativa para cada exercício único.
      */
     @Query("SELECT as FROM AnswerStudent as " +
-           "JOIN as.exercise e " +
-           "JOIN e.listExercise le " +
-           "JOIN le.grades g " +
-           "WHERE as.student.id = :studentId " +
-           "AND g.id = :gradeId " +
-           "AND (:listId IS NULL OR le.id = :listId) " +
-           "AND as.createdAt = (SELECT MAX(as2.createdAt) FROM AnswerStudent as2 WHERE as2.student.id = as.student.id AND as2.exercise.id = as.exercise.id)")
+    "JOIN as.exercise e " +
+    "JOIN e.listExercise le " +
+    "WHERE as.student.id = :studentId " +
+    "AND le.id IN (SELECT le2.id FROM Grade g JOIN g.listExercises le2 WHERE g.id = :gradeId) " +
+    "AND (:listId IS NULL OR le.id = :listId) " +
+    "AND as.createdAt = (" +
+    "   SELECT MAX(as2.createdAt) FROM AnswerStudent as2 " +
+    "   WHERE as2.student.id = as.student.id AND as2.exercise.id = as.exercise.id)")
     List<AnswerStudent> findLatestAnswersByStudentAndGradeAndList(@Param("studentId") Long studentId,
                                                                   @Param("gradeId") Long gradeId,
                                                                   @Param("listId") Long listId);
@@ -45,12 +46,11 @@ public interface AnswerStudentRepository extends JpaRepository<AnswerStudent, Lo
      * @return O número total de tentativas.
      */
     @Query("SELECT COUNT(as) FROM AnswerStudent as " +
-           "JOIN as.exercise e " +
-           "JOIN e.listExercise le " +
-           "JOIN le.grades g " +
-           "WHERE as.student.id = :studentId " +
-           "AND g.id = :gradeId " +
-           "AND (:listId IS NULL OR le.id = :listId)")
+    "JOIN as.exercise e " +
+    "JOIN e.listExercise le " +
+    "WHERE as.student.id = :studentId " +
+    "AND le.id IN (SELECT le2.id FROM Grade g JOIN g.listExercises le2 WHERE g.id = :gradeId) " +
+    "AND (:listId IS NULL OR le.id = :listId)")
     int countTotalAttemptsByStudentAndGradeAndList(@Param("studentId") Long studentId,
                                                    @Param("gradeId") Long gradeId,
                                                    @Param("listId") Long listId);
@@ -66,12 +66,11 @@ public interface AnswerStudentRepository extends JpaRepository<AnswerStudent, Lo
      * @return Um Set de AnswerStudent contendo todas as respostas relevantes.
      */
     @Query("SELECT as FROM AnswerStudent as " +
-           "JOIN FETCH as.exercise e " + // Adicionado FETCH para carregar o exercício junto
-           "JOIN FETCH e.listExercise le " + // Adicionado FETCH para carregar a lista do exercício junto
-           "JOIN le.grades g " +
-           "WHERE as.student.id = :studentId " +
-           "AND g.id = :gradeId " +
-           "AND (:listId IS NULL OR le.id = :listId)")
+    "JOIN FETCH as.exercise e " +
+    "JOIN FETCH e.listExercise le " +
+    "WHERE as.student.id = :studentId " +
+    "AND le.id IN (SELECT le2.id FROM Grade g JOIN g.listExercises le2 WHERE g.id = :gradeId) " +
+    "AND (:listId IS NULL OR le.id = :listId)")
     Set<AnswerStudent> findAllRelevantAnswersByStudentAndGradeAndList(@Param("studentId") Long studentId,
                                                                       @Param("gradeId") Long gradeId,
                                                                       @Param("listId") Long listId);

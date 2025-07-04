@@ -14,6 +14,7 @@ import br.com.net.sqlab_backend.domain.exercises.dto.AnswerStudentCreateDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.QueryExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.dto.exercise.ResponseSolveExerciseDTO;
 import br.com.net.sqlab_backend.domain.exercises.models.AnswerProfessor;
+import br.com.net.sqlab_backend.domain.exercises.models.AnswerStudent;
 import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
 import br.com.net.sqlab_backend.domain.exercises.models.QueryResult;
 
@@ -37,38 +38,66 @@ public class SolveExerciseService {
     }
 
     public ResponseSolveExerciseDTO handleSolveExercise(QueryExerciseDTO query) {
-        ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(false, null, 0);
+        // ResponseSolveExerciseDTO res = new ResponseSolveExerciseDTO(false, null, 0);
         // Salvar query em answer_student
         AnswerStudentCreateDTO dto = new AnswerStudentCreateDTO(query.query(), null, query.exerciseId(), query.studentId());
-        answerStudentService.save(dto);
+        AnswerStudent savedAnswer = answerStudentService.save(dto);
         // Recuperar query resposta de answer_professor/resposta pré cadastrada
         AnswerProfessor answer = answerProfessorService.getByExerciseId(query.exerciseId());
         Exercise exercise = exerciseService.getById(query.exerciseId());
+        ResponseSolveExerciseDTO res;
+
         switch (exercise.getType()) {
             case SELECT:
                 res = solveSelectExercise(query, answer.getAnswer());
-                return res;
+                break;
             case UPDATE:
-                res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
-                return res;
             case INSERT:
-                res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
-                return res;
             case DELETE:
-                res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
-                return res;
-            case CREATE:
-                res = solveCreateExercise(query, answer.getAnswer(), exercise.getTableName());
-                return res;
-            case DROP:
-                res = solveDropExercise(query, answer.getAnswer(), exercise.getTableName());
-                return res;
             case ALTER:
                 res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
-                return res;
+                break;
+            case CREATE:
+                res = solveCreateExercise(query, answer.getAnswer(), exercise.getTableName());
+                break;
+            case DROP:
+                res = solveDropExercise(query, answer.getAnswer(), exercise.getTableName());
+                break;
             default:
                 throw new IllegalArgumentException("Tipo de exercício desconhecido: " + exercise.getType());
         }
+    
+        // Atualiza o resultado (correto/incorreto) na resposta salva
+        savedAnswer.setCorrect(res.isCorrect());
+        answerStudentService.update(savedAnswer);
+    
+        return res;
+
+        // switch (exercise.getType()) {
+        //     case SELECT:
+        //         res = solveSelectExercise(query, answer.getAnswer());
+        //         return res;
+        //     case UPDATE:
+        //         res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
+        //         return res;
+        //     case INSERT:
+        //         res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
+        //         return res;
+        //     case DELETE:
+        //         res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
+        //         return res;
+        //     case CREATE:
+        //         res = solveCreateExercise(query, answer.getAnswer(), exercise.getTableName());
+        //         return res;
+        //     case DROP:
+        //         res = solveDropExercise(query, answer.getAnswer(), exercise.getTableName());
+        //         return res;
+        //     case ALTER:
+        //         res = solveUpdateExercise(query, answer.getAnswer(), exercise.getTableName());
+        //         return res;
+        //     default:
+        //         throw new IllegalArgumentException("Tipo de exercício desconhecido: " + exercise.getType());
+        // }
     }
 
     public ResponseSolveExerciseDTO solveCreateExercise(QueryExerciseDTO query, String queryAnswer, String tableName) {

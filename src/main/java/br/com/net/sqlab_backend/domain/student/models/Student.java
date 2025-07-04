@@ -14,13 +14,13 @@ import br.com.net.sqlab_backend.domain.relatory.dto.RelatoryResponseDTO;
 import br.com.net.sqlab_backend.domain.shared.models.UserEntity;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor; // Mantenha esta anotação
+// import lombok.NoArgsConstructor; // Mantenha esta anotação
 import lombok.AllArgsConstructor; // ADICIONAR esta anotação se quiser o construtor com todos os argumentos via Lombok
 
 @Data
 @Table(name = "student")
 @Entity
-@NoArgsConstructor // Manter para o construtor padrão exigido pelo JPA/Hibernate
+// @NoArgsConstructor // Manter para o construtor padrão exigido pelo JPA/Hibernate
 @AllArgsConstructor // Adicionar esta anotação para gerar um construtor com todos os argumentos via Lombok
 public class Student implements UserEntity {
 
