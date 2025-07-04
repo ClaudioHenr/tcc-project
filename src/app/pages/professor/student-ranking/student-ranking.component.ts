@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StudentService } from '../../student/services/student/student.service'; // Use student service for ranking
+import { StudentService } from '../../student/services/student/student.service'; // Usar o serviço de estudante para ranking
 import { StudentRanking } from '../../../models/student-ranking.model';
-import { GradeService as ProfessorGradeService } from '../../professor/services/grade/grade.service'; // Import Professor's GradeService
-import { ListexerciseService as ProfessorListService } from '../../professor/services/lists/listexercise.service'; // Import Professor's ListexerciseService
+import { GradeService as ProfessorGradeService } from '../../professor/services/grade/grade.service'; // Importar o GradeService do Professor
+import { ListexerciseService as ProfessorListService } from '../../professor/services/lists/listexercise.service'; // Importar o ListexerciseService do Professor
 import { TokenService } from '../../../core/services/token.service';
+import { environment } from '../../../../environments/environment'; // Importado para verificar o ambiente
 
 @Component({
   selector: 'app-student-ranking',
@@ -16,120 +17,123 @@ import { TokenService } from '../../../core/services/token.service';
   styleUrls: ['./student-ranking.component.css']
 })
 export class StudentRankingComponent implements OnInit {
-  // Array to hold the student ranking data
+  // Array para armazenar os dados de ranking dos alunos
   studentRankings: StudentRanking[] = [];
-  // Selected grade and list for filtering
+  // ID da turma e da lista selecionados para filtragem
   selectedGradeId: string = '';
   selectedListId: string = '';
 
-  // Arrays to hold available grades and lists for dropdowns
+  // Arrays para armazenar as turmas e listas disponíveis para os dropdowns
   grades: any[] = [];
   lists: any[] = [];
 
   constructor(
-    private studentService: StudentService, // Service to fetch student ranking
-    private professorGradeService: ProfessorGradeService, // Service to get professor's grades
-    private professorListService: ProfessorListService, // Service to get lists for a grade
-    private tokenService: TokenService, // Service to get current user ID
+    private studentService: StudentService, // Serviço para buscar o ranking de alunos
+    private professorGradeService: ProfessorGradeService, // Serviço para obter as turmas do professor
+    private professorListService: ProfessorListService, // Serviço para obter as listas de exercícios de uma turma
+    private tokenService: TokenService, // Serviço para obter o ID do usuário atual
     private router: Router,
-    private location: Location // For back navigation
+    private location: Location // Para navegação de retorno
   ) { }
 
   ngOnInit(): void {
-    // Load all grades associated with the current professor when the component initializes
+    // Carrega todas as turmas associadas ao professor logado ao inicializar o componente
     this.loadGrades();
   }
 
   /**
-   * Loads the grades associated with the currently logged-in professor.
+   * Carrega as turmas associadas ao professor atualmente logado.
    */
   loadGrades(): void {
     const professorId = this.tokenService.getUserId();
     if (professorId) {
+      // Chama o serviço de turma do professor para obter as turmas
       this.professorGradeService.getGrades().subscribe({
         next: (data: any) => {
           this.grades = data;
-          // If there are grades, select the first one by default and load its lists
+          // Se houver turmas, seleciona a primeira por padrão e carrega suas listas
           if (this.grades.length > 0) {
             this.selectedGradeId = this.grades[0].id.toString();
             this.loadListsByGrade(this.selectedGradeId);
-            this.fetchRanking(); // Fetch ranking for the initial selected grade
+            this.fetchRanking(); // Busca o ranking para a turma inicial selecionada
           }
         },
         error: (err) => {
-          console.error('Error fetching grades:', err);
-          alert('Failed to load grades. Please try again later.');
+          console.error('Erro ao buscar turmas:', err);
+          alert('Falha ao carregar turmas. Por favor, tente novamente mais tarde.');
         }
       });
     }
   }
 
   /**
-   * Loads lists of exercises for a selected grade.
-   * @param gradeId The ID of the selected grade.
+   * Carrega as listas de exercícios para uma turma selecionada.
+   * @param gradeId O ID da turma selecionada.
    */
   loadListsByGrade(gradeId: string): void {
     if (gradeId) {
+      // Chama o serviço de lista de exercícios do professor para obter as listas da turma
       this.professorListService.getListExercises(gradeId).subscribe({
         next: (data: any) => {
           this.lists = data;
-          // Reset selected list when grade changes
+          // Reinicia a lista selecionada quando a turma muda
           this.selectedListId = '';
         },
         error: (err) => {
-          console.error('Error fetching lists:', err);
-          alert('Failed to load lists for the selected grade. Please try again later.');
+          console.error('Erro ao buscar listas:', err);
+          alert('Falha ao carregar listas para a turma selecionada. Por favor, tente novamente mais tarde.');
         }
       });
     } else {
-      this.lists = []; // Clear lists if no grade is selected
+      this.lists = []; // Limpa as listas se nenhuma turma for selecionada
       this.selectedListId = '';
     }
   }
 
   /**
-   * Fetches the student ranking based on the selected grade and optional list.
+   * Busca o ranking dos alunos com base na turma selecionada e na lista opcional.
    */
   fetchRanking(): void {
     if (this.selectedGradeId) {
+      // Chama o serviço de estudante para obter o ranking
       this.studentService.getStudentRanking(this.selectedGradeId, this.selectedListId).subscribe({
         next: (data: StudentRanking[]) => {
-          this.studentRankings = data.sort((a, b) => b.score - a.score); // Sort by score descending
+          this.studentRankings = data.sort((a, b) => b.score - a.score); // Ordena pela pontuação em ordem decrescente
         },
         error: (err) => {
-          console.error('Error fetching ranking:', err);
-          this.studentRankings = []; // Clear ranking on error
-          alert(err.message || 'Failed to fetch student ranking. Please try again later.');
+          console.error('Erro ao buscar ranking:', err);
+          this.studentRankings = []; // Limpa o ranking em caso de erro
+          alert(err.message || 'Falha ao buscar ranking de alunos. Por favor, tente novamente mais tarde.');
         }
       });
     } else {
-      this.studentRankings = []; // Clear ranking if no grade is selected
+      this.studentRankings = []; // Limpa o ranking se nenhuma turma for selecionada
     }
   }
 
   /**
-   * Handles the change event for the grade dropdown.
-   * @param event The change event.
+   * Lida com o evento de mudança para o dropdown de turmas.
+   * @param event O evento de mudança.
    */
   onGradeChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     this.selectedGradeId = target.value;
-    this.loadListsByGrade(this.selectedGradeId); // Load lists for the newly selected grade
-    this.fetchRanking(); // Fetch ranking based on the new grade selection
+    this.loadListsByGrade(this.selectedGradeId); // Carrega as listas para a turma recém-selecionada
+    this.fetchRanking(); // Busca o ranking com base na nova seleção de turma
   }
 
   /**
-   * Handles the change event for the list dropdown.
-   * @param event The change event.
+   * Lida com o evento de mudança para o dropdown de listas.
+   * @param event O evento de mudança.
    */
   onListChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     this.selectedListId = target.value;
-    this.fetchRanking(); // Fetch ranking based on the new list selection
+    this.fetchRanking(); // Busca o ranking com base na nova seleção de lista
   }
 
   /**
-   * Navigates back to the previous page.
+   * Navega de volta para a página anterior.
    */
   back(): void {
     this.location.back();

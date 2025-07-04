@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
     apiUrl: "http://localhost:8080",
-    mockData: true, //'true' para usar dados mockados em dev 'false' para usar dados mockados em prod
+    mockData: false, // Alterado: Definido como 'false' para usar dados reais durante o desenvolvimento
 };
