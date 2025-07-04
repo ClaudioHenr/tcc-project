@@ -73,17 +73,30 @@ export class StudentRankingComponent implements OnInit {
   loadListsByGrade(gradeId: string): void {
     if (gradeId) {
       // Chama o serviço de lista de exercícios do professor para obter as listas da turma
-      this.professorListService.getListExercises(gradeId).subscribe({
-        next: (data: any) => {
-          this.lists = data;
-          // Reinicia a lista selecionada quando a turma muda
-          this.selectedListId = '';
-        },
-        error: (err) => {
-          console.error('Erro ao buscar listas:', err);
-          alert('Falha ao carregar listas para a turma selecionada. Por favor, tente novamente mais tarde.');
-        }
-      });
+      // Verifica se mockData está ativo e usa o mock correspondente
+      if (environment.mockData) {
+        this.professorListService.getListExercises(gradeId).subscribe({
+          next: (data: any) => {
+            this.lists = data;
+            this.selectedListId = ''; // Reinicia a lista selecionada quando a turma muda
+          },
+          error: (err) => {
+            console.error('Erro ao buscar listas (mock):', err);
+            alert('Falha ao carregar listas mockadas. Por favor, tente novamente mais tarde.');
+          }
+        });
+      } else {
+        this.professorListService.getListExercises(gradeId).subscribe({
+          next: (data: any) => {
+            this.lists = data;
+            this.selectedListId = ''; // Reinicia a lista selecionada quando a turma muda
+          },
+          error: (err) => {
+            console.error('Erro ao buscar listas (backend):', err);
+            alert('Falha ao carregar listas para a turma selecionada. Por favor, tente novamente mais tarde.');
+          }
+        });
+      }
     } else {
       this.lists = []; // Limpa as listas se nenhuma turma for selecionada
       this.selectedListId = '';
@@ -95,10 +108,24 @@ export class StudentRankingComponent implements OnInit {
    */
   fetchRanking(): void {
     if (this.selectedGradeId) {
-      // Chama o serviço de estudante para obter o ranking
+      // O StudentService já contém a lógica de mockData, então apenas o chamamos
       this.studentService.getStudentRanking(this.selectedGradeId, this.selectedListId).subscribe({
         next: (data: StudentRanking[]) => {
-          this.studentRankings = data.sort((a, b) => b.score - a.score); // Ordena pela pontuação em ordem decrescente
+          // O backend já fará a ordenação conforme as regras (Corretos desc, Tentativas asc, Score desc)
+          // mas reordenamos aqui para garantir a consistência no frontend, caso a ordem mude no backend.
+          this.studentRankings = data.sort((a, b) => {
+            // 1º: Exercícios corretos (decrescente)
+            if (b.totalCorrectAnswers !== a.totalCorrectAnswers) {
+              return b.totalCorrectAnswers - a.totalCorrectAnswers;
+            }
+            // 2º: Menor Número de tentativas (crescente)
+            // Alterado: Acessando a propriedade corrigida
+            if (a.totalExercisesAttempted !== b.totalExercisesAttempted) {
+              return a.totalExercisesAttempted - b.totalExercisesAttempted;
+            }
+            // 3º: Pontuação (decrescente)
+            return b.score - a.score;
+          });
         },
         error: (err) => {
           console.error('Erro ao buscar ranking:', err);
