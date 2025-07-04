@@ -20,7 +20,8 @@
 
         <label for="grade-select" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Turma:</label>
 
-        <select id="grade-select" [(ngModel)]="selectedGradeId" (change)="onGradeChange($event)"
+        <!-- <select id="grade-select" [(ngModel)]="selectedGradeId" (change)="onGradeChange($event)" -->
+        <select id="grade-select" [(ngModel)]="selectedGradeId"
           class="block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
 
           <option value="" disabled selected>Selecione uma turma</option>
@@ -40,7 +41,9 @@
         <label for="list-select" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Lista
           (Opcional):</label>
 
-        <select id="list-select" [(ngModel)]="selectedListId" (change)="onListChange($event)"
+        <!-- <select id="list-select" [(ngModel)]="selectedListId" (change)="onListChange($event)" -->
+        <select id="list-select" [(ngModel)]="selectedListId"
+
           class="block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           [disabled]="!selectedGradeId">
 
