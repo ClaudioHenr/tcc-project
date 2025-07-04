@@ -2,7 +2,7 @@ package br.com.net.sqlab_backend.domain.student.services;
 
 import br.com.net.sqlab_backend.domain.exceptions.custom.EntityNotFoundException;
 import br.com.net.sqlab_backend.domain.exercises.models.AnswerStudent;
-import br.com.net.sqlab_backend.domain.exercises.models.Exercise;
+import br.com.net.sqlab_backend.domain.exercises.repositories.AnswerStudentRepository; // Adicionado
 import br.com.net.sqlab_backend.domain.grade.models.Grade;
 import br.com.net.sqlab_backend.domain.grade.services.GradeService;
 import br.com.net.sqlab_backend.domain.grade.repository.GradeRepository;
@@ -16,8 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,17 +34,20 @@ public class StudentService {
     private final PasswordEncoder passwordEncoder;
     private final GradeRepository gradeRepository;
     private final GradeService gradeService;
+    private final AnswerStudentRepository answerStudentRepository; // Adicionado
 
     public StudentService(StudentRepository studentRepository,
                           PasswordEncoder passwordEncoder,
                           StudentGradeRepository studentGradeRepository,
                           GradeRepository gradeRepository,
-                          GradeService gradeService) {
+                          GradeService gradeService,
+                          AnswerStudentRepository answerStudentRepository) { // Adicionado
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
         this.studentGradeRepository = studentGradeRepository;
         this.gradeRepository = gradeRepository;
         this.gradeService = gradeService;
+        this.answerStudentRepository = answerStudentRepository; // Inicializado
     }
 
     public Student getById(Long id) {
@@ -102,6 +107,8 @@ public class StudentService {
     /**
      * Calcula e retorna o ranking dos alunos para uma turma específica,
      * opcionalmente filtrado por uma lista de exercícios específica.
+     * Cada métrica (exercícios corretos, total de tentativas, pontuação)
+     * é calculada através de consultas isoladas ao banco de dados, conforme solicitado.
      * @param gradeId O ID da turma.
      * @param listId Opcional. O ID da lista para filtrar.
      * @return Uma lista de StudentRankingDTO.
@@ -115,51 +122,35 @@ public class StudentService {
         }
         Grade grade = optionalGrade.get();
 
-        // 2. Obter todos os alunos associados a esta turma (com fetch join para respostas e exercícios)
+        // 2. Obter todos os alunos associados a esta turma (apenas os alunos, sem as respostas ainda)
         List<Student> studentsInGrade = studentRepository.findByGradesContaining(grade);
 
         List<StudentRankingDTO> rankings = new ArrayList<>();
 
-        // 3. Iterar sobre cada aluno para calcular suas métricas de ranking
+        // 3. Iterar sobre cada aluno para calcular suas métricas de ranking com consultas isoladas
         for (Student student : studentsInGrade) {
-            // Filtrar as respostas do aluno que são relevantes para a turma e, se houver, para a lista específica
-            Set<AnswerStudent> relevantAnswers = student.getStudentAnswers().stream()
-                .filter(answer -> {
-                    Exercise exercise = answer.getExercise();
-                    if (exercise == null || exercise.getListExercise() == null) {
-                        return false; // Resposta sem exercício ou exercício sem lista associada
-                    }
-                    ListExercise listExercise = exercise.getListExercise();
+            // Consulta 1: Nome do aluno (já obtido ao carregar studentsInGrade)
+            String studentName = student.getName();
 
-                    // Verifica se a lista do exercício pertence à turma
-                    boolean belongsToGradeLists = grade.getListExercises().contains(listExercise);
+            // Consulta 2: Exercícios corretos (baseado na última tentativa)
+            // Alterado: Usa o novo método do AnswerStudentRepository para buscar as últimas respostas corretas
+            int totalCorrectAnswers = calculateCorrectExercisesIsolated(student.getId(), gradeId, listId);
 
-                    // Se listId foi fornecido, filtra também pela lista específica
-                    if (listId != null) {
-                        return belongsToGradeLists && listExercise.getId().equals(listId);
-                    }
-                    return belongsToGradeLists;
-                })
-                .collect(Collectors.toSet());
+            // Consulta 3: Número total de tentativas (todas as submissões)
+            // Alterado: Usa o novo método do AnswerStudentRepository para contar todas as tentativas
+            int totalAttempts = calculateTotalAttemptsIsolated(student.getId(), gradeId, listId);
 
-            // Calcula o número de exercícios corretos (baseado na última tentativa)
-            // Criado: Função para calcular exercícios corretos
-            int totalCorrectExercises = calculateCorrectExercises(relevantAnswers);
-
-            // Calcula o número total de tentativas (todas as submissões)
-            // Criado: Função para calcular o total de tentativas
-            int totalAttempts = calculateTotalAttempts(relevantAnswers);
-
-            // Calcula a pontuação (média ponderada)
-            // Criado: Função para calcular a pontuação
-            double score = calculateScore(relevantAnswers);
+            // Consulta 4: Pontuação (média ponderada)
+            // Alterado: Usa o novo método do AnswerStudentRepository para buscar todas as respostas relevantes
+            // e calcula a pontuação em memória.
+            double score = calculateScoreIsolated(student.getId(), gradeId, listId);
 
             // Adiciona o DTO de ranking para o aluno
             rankings.add(new StudentRankingDTO(
                 student.getId(),
-                student.getName(),
-                totalCorrectExercises, // Agora é o número de exercícios únicos corretos
-                totalAttempts,        // Agora é a soma de todas as tentativas
+                studentName,
+                totalCorrectAnswers,
+                totalAttempts,
                 score
             ));
         }
@@ -169,7 +160,7 @@ public class StudentService {
             // 1º Exercícios acertados (decrescente)
             .comparingInt(StudentRankingDTO::getTotalCorrectAnswers).reversed()
             // 2º Menor Número de tentativas para o maior (crescente)
-            .thenComparingInt(StudentRankingDTO::getTotalExercisesAttempted) // Alterado: Usando getTotalExercisesAttempted do DTO
+            .thenComparingInt(StudentRankingDTO::getTotalExercisesAttempted)
             // 3º Pontuação (Notas) (decrescente)
             .thenComparingDouble(StudentRankingDTO::getScore).reversed()
         );
@@ -178,27 +169,19 @@ public class StudentService {
     }
 
     /**
-     * Criado: Função para calcular o número de exercícios que um aluno acertou,
-     * considerando apenas a última tentativa para cada exercício.
-     * @param answers O conjunto de respostas relevantes do aluno.
+     * Criado: Calcula o número de exercícios que um aluno acertou,
+     * realizando uma consulta isolada ao banco de dados para obter as últimas tentativas corretas.
+     * @param studentId O ID do aluno.
+     * @param gradeId O ID da turma.
+     * @param listId Opcional. O ID da lista de exercícios.
      * @return O número de exercícios únicos onde a última tentativa foi correta.
      */
-    private int calculateCorrectExercises(Set<AnswerStudent> answers) {
-        if (answers == null || answers.isEmpty()) {
-            return 0;
-        }
+    private int calculateCorrectExercisesIsolated(Long studentId, Long gradeId, Long listId) {
+        // Busca as últimas respostas para cada exercício do aluno, filtradas por turma e lista.
+        List<AnswerStudent> latestAnswers = answerStudentRepository.findLatestAnswersByStudentAndGradeAndList(studentId, gradeId, listId);
 
-        // Mapeia cada exercício para a sua última tentativa (mais recente)
-        Map<Long, AnswerStudent> latestAttemptsPerExercise = answers.stream()
-            .collect(Collectors.toMap(
-                answer -> answer.getExercise().getId(), // Chave: ID do exercício
-                answer -> answer, // Valor: a própria AnswerStudent
-                // Função de merge: se houver duplicidade de chaves, mantém a AnswerStudent com o createdAt mais recente
-                (existing, replacement) -> existing.getCreatedAt().isAfter(replacement.getCreatedAt()) ? existing : replacement
-            ));
-
-        // Conta quantos desses últimos tentativas foram de fato corretas
-        long correctCount = latestAttemptsPerExercise.values().stream()
+        // Conta quantos desses últimas respostas são corretas.
+        long correctCount = latestAnswers.stream()
             .filter(AnswerStudent::isCorrect)
             .count();
 
@@ -206,28 +189,35 @@ public class StudentService {
     }
 
     /**
-     * Criado: Função para calcular o número total de tentativas (submissões) de um aluno
-     * para todos os exercícios relevantes.
-     * @param answers O conjunto de respostas relevantes do aluno.
-     * @return O número total de tentativas (soma de todas as AnswerStudent).
+     * Criado: Calcula o número total de tentativas (submissões) de um aluno,
+     * realizando uma consulta isolada ao banco de dados.
+     * @param studentId O ID do aluno.
+     * @param gradeId O ID da turma.
+     * @param listId Opcional. O ID da lista de exercícios.
+     * @return O número total de tentativas.
      */
-    private int calculateTotalAttempts(Set<AnswerStudent> answers) {
-        return answers != null ? answers.size() : 0;
+    private int calculateTotalAttemptsIsolated(Long studentId, Long gradeId, Long listId) {
+        return answerStudentRepository.countTotalAttemptsByStudentAndGradeAndList(studentId, gradeId, listId);
     }
 
     /**
-     * Criado: Função para calcular a pontuação de um aluno.
-     * A pontuação é a porcentagem de exercícios acertados sobre o total de exercícios únicos tentados.
-     * @param answers O conjunto de respostas relevantes do aluno.
+     * Criado: Calcula a pontuação de um aluno, buscando todas as respostas relevantes
+     * e processando-as em memória para determinar a média ponderada.
+     * @param studentId O ID do aluno.
+     * @param gradeId O ID da turma.
+     * @param listId Opcional. O ID da lista de exercícios.
      * @return A pontuação percentual.
      */
-    private double calculateScore(Set<AnswerStudent> answers) {
-        if (answers == null || answers.isEmpty()) {
+    private double calculateScoreIsolated(Long studentId, Long gradeId, Long listId) {
+        // Busca todas as respostas relevantes do aluno para o cálculo detalhado em memória.
+        Set<AnswerStudent> allRelevantAnswers = answerStudentRepository.findAllRelevantAnswersByStudentAndGradeAndList(studentId, gradeId, listId);
+
+        if (allRelevantAnswers == null || allRelevantAnswers.isEmpty()) {
             return 0.0;
         }
 
         // Mapeia cada exercício para a sua última tentativa (mais recente)
-        Map<Long, AnswerStudent> latestAttemptsPerExercise = answers.stream()
+        Map<Long, AnswerStudent> latestAttemptsPerExercise = allRelevantAnswers.stream()
             .collect(Collectors.toMap(
                 answer -> answer.getExercise().getId(),
                 answer -> answer,
