@@ -98,6 +98,7 @@ export class StudentRankingComponent implements OnInit {
       // Chama o serviço de estudante para obter o ranking
       this.studentService.getStudentRanking(this.selectedGradeId, this.selectedListId).subscribe({
         next: (data: StudentRanking[]) => {
+          console.log(data);
           this.studentRankings = data.sort((a, b) => b.score - a.score); // Ordena pela pontuação em ordem decrescente
         },
         error: (err) => {
