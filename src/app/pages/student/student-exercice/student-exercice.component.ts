@@ -7,6 +7,7 @@ import { TokenService } from '../../../core/services/token.service';
 
 interface Exercise {
   id: string;
+  title: string;
   description: string;
   dialect: string;
   type: string
