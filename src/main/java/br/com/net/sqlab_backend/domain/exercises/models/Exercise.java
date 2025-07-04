@@ -73,6 +73,10 @@ public class Exercise {
 		this.professor = professor;
 		this.listExercise = listExercise;
 	}
+	
+	public Exercise() {
+		super();
+	}
 
 	public Long getId() {
 		return id;

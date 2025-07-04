@@ -8,24 +8,22 @@ import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-//import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import br.com.net.sqlab_backend.domain.exercises.models.AnswerStudent; // Import AnswerStudent
+import br.com.net.sqlab_backend.domain.exercises.models.AnswerStudent;
 import br.com.net.sqlab_backend.domain.grade.models.Grade;
 import br.com.net.sqlab_backend.domain.relatory.dto.RelatoryResponseDTO;
 import br.com.net.sqlab_backend.domain.shared.models.UserEntity;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.NoArgsConstructor; // Mantenha esta anotação
+import lombok.AllArgsConstructor; // ADICIONAR esta anotação se quiser o construtor com todos os argumentos via Lombok
 
 @Data
 @Table(name = "student")
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor // Manter para o construtor padrão exigido pelo JPA/Hibernate
+@AllArgsConstructor // Adicionar esta anotação para gerar um construtor com todos os argumentos via Lombok
 public class Student implements UserEntity {
 
-    /**
-     * */
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -50,7 +48,6 @@ public class Student implements UserEntity {
     @Transient
     private String confirmPassword;
 
-    //@JsonManagedReference
     @ManyToMany
     @JoinTable(
         name = "student_grade",
@@ -59,21 +56,26 @@ public class Student implements UserEntity {
     )
     private Set<Grade> grades = new HashSet<>();
 
-    // New relationship to AnswerStudent
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AnswerStudent> studentAnswers = new HashSet<>();
     
     public Student(String name, String email, String registrationNumber, String password, String confirmEmail,
-            String confirmPassword) {
+                   String confirmPassword) {
         this.name = name;
         this.email = email;
         this.registrationNumber = registrationNumber;
         this.password = password;
         this.confirmEmail = confirmEmail;
         this.confirmPassword = confirmPassword;
+        this.grades = new HashSet<>();
+        this.studentAnswers = new HashSet<>();
     }
+    
+    public Student() {
+		super();
+	}
 
-    public Long getId() {
+	public Long getId() {
         return id;
     }
 
@@ -176,7 +178,10 @@ public class Student implements UserEntity {
         this.studentAnswers = studentAnswers;
     }
 
+    // Se RelatoryResponseDTO não for uma coleção em Student, este método pode ser ajustado
     public Collection<RelatoryResponseDTO> getAttempts() {
-        return null;
+        // Exemplo: se você precisa de uma lista de tentativas formatadas,
+        // isso precisaria de lógica para transformar 'studentAnswers' em 'RelatoryResponseDTO'
+        return null; // Ou retornar uma lista vazia ou implementar a lógica de transformação
     }
 }

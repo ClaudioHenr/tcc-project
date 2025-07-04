@@ -8,33 +8,46 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.NoArgsConstructor; // Add this import
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "answer_student")
-@NoArgsConstructor // Add this annotation for default constructor
+@NoArgsConstructor
 public class AnswerStudent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-	@Column(length = 500)
+    @Column(length = 500)
     private String answer;
 
-    @Column(name = "is_correct") // Ensure column name is explicit if different
+    @Column(name = "is_correct")
     private boolean isCorrect;
 
     @ManyToOne
-    @JoinColumn(name = "exercise_id") // Corrected JoinColumn name
+    @JoinColumn(name = "exercise_id")
     private Exercise exercise;
 
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;
+
+    // Novo campo para armazenar o timestamp de criação da resposta
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    // Método para preencher automaticamente o campo 'createdAt' antes de persistir a entidade
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     public AnswerStudent(String answer, boolean isCorrect, Exercise exercise, Student student) {
         this.answer = answer;
@@ -81,5 +94,13 @@ public class AnswerStudent {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

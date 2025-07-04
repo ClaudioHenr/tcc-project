@@ -20,18 +20,19 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor; // Manter esta anotação
+import lombok.AllArgsConstructor; // ADICIONAR esta anotação se quiser o construtor com todos os argumentos via Lombok
 
 @Data
 @Table(name = "professor")
 @Entity
+@NoArgsConstructor // Manter para o construtor padrão exigido pelo JPA/Hibernate
+@AllArgsConstructor // Adicionar esta anotação para gerar um construtor com todos os argumentos via Lombok
 public class Professor implements UserEntity {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -46,13 +47,34 @@ public class Professor implements UserEntity {
 
     private transient String confirmPassword;
 
-	@ManyToMany
+    @ManyToMany
     @JoinTable(
         name = "professor_grade",
         joinColumns = @JoinColumn(name = "professor_id"),
         inverseJoinColumns = @JoinColumn(name = "grade_id")
     )
-    private Set<Grade> grades = new HashSet<>(); 
+    private Set<Grade> grades = new HashSet<>();
+
+    // Se você tem um construtor manual para Professor que recebe nome, email, senha, etc.,
+    // e ele não inclui o ID ou coleções como 'grades', pode haver a mesma questão.
+    // Com @AllArgsConstructor do Lombok, um construtor com todos os campos persistidos
+    // e com o 'id' e 'grades' seria gerado.
+    // Se o construtor manual existe e é o único, o Lombok não gerará o padrão sem argumentos.
+    // A melhor prática é depender do Lombok para gerar os construtores se eles são simples.
+    // Exemplo de um construtor manual que poderia existir e causar problemas se fosse o único:
+    /*
+    public Professor(String name, String email, String password, String confirmPassword) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.grades = new HashSet<>(); // Inicialização de coleção
+    }
+    */
+    // Se não há um construtor manual explícito além do que Lombok gera, as anotações
+    // @NoArgsConstructor e @AllArgsConstructor devem ser suficientes.
+    // Deixei o @AllArgsConstructor no Professor por segurança, caso um construtor manual
+    // estivesse implicitamente impedindo o @NoArgsConstructor.
 
     // Implementações de UserDetails (via UserEntity)
     @Override
@@ -85,62 +107,18 @@ public class Professor implements UserEntity {
         return true;
     }
 
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	// public Grade getGrade() {
-	// 	return grade;
-	// }
-
-	// public void setGrade(Grade grade) {
-	// 	this.grade = grade;
-	// }
-
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
-	}
-
-	public Set<Grade> getGrades() {
-		return grades;
-	}
-
-	public void setGrades(Set<Grade> grades) {
-		this.grades = grades;
-	}
-	
-	
+    // Getters e Setters (já gerados por @Data)
+    // Listados aqui apenas para referência, se você os removeu do código
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public String getConfirmPassword() { return confirmPassword; }
+    public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
+    public Set<Grade> getGrades() { return grades; }
+    public void setGrades(Set<Grade> grades) { this.grades = grades; }
 }
