@@ -1,0 +1,76 @@
+<div class="p-6 sm:ml-64 mt-14 mx-auto">
+    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md space-y-6">
+      <div class="flex justify-between items-center">
+        <button 
+          (click)="back()"
+        >
+          Voltar
+        </button>
+        <h2 class="text-2xl font-bold text-gray-800">Gerenciar Listas</h2>
+        <button
+          (click)="addList()"
+          class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none"
+        >
+          + Adicionar Lista
+        </button>
+      </div>
+
+      <div class="mt-6 space-y-4">
+        @for (list of lists; track $index) {
+          <div class="flex justify-between items-center p-4 border rounded-lg shadow-sm">
+            <span class="text-lg text-gray-700">{{ list.title }}</span>
+            <div class="flex gap-2">
+
+              <button
+                (click)="addExercise(list.id)"
+                class="flex items-center gap-2 text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none"
+              >
+                <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <line x1="12" y1="5" x2="12" y2="19" stroke-width="2" stroke-linecap="round" />
+                  <line x1="5" y1="12" x2="19" y2="12" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                
+                Criar Exercício
+              </button>
+
+              <button
+                (click)="viewExercises(list.id)"
+                class="flex items-center gap-2 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none"
+              >
+                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Pontos da lista -->
+                  <circle cx="5" cy="6" r="1.5" fill="currentColor" />
+                  <circle cx="5" cy="12" r="1.5" fill="currentColor" />
+                  <circle cx="5" cy="18" r="1.5" fill="currentColor" />
+                  <!-- Linhas da lista -->
+                  <line x1="9" y1="6" x2="20" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <line x1="9" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <line x1="9" y1="18" x2="20" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Exercícios
+              </button>
+
+              <!-- Botão Editar -->
+              <button
+                (click)="editList(list.id)"
+                class="flex items-center gap-2 text-white bg-amber-600 hover:bg-amber-700 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none"
+              >
+                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+                  />
+                </svg>
+                Editar
+              </button>
+
+            </div>
+          </div>
+        } @empty {
+          <div>
+            <p>Nenhuma lista cadastrada para esta turma</p>
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
